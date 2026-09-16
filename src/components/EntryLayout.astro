@@ -1,0 +1,24 @@
+---
+// Two-column detail page: a readable text column plus a sticky side column of
+// related links. The side column moves below the text when there isn't room.
+import BackButton from './BackButton.astro';
+
+interface Props {
+  backFallback: string;
+  backLabel: string;
+}
+
+const { backFallback, backLabel } = Astro.props;
+---
+
+<div class="entry-wrap">
+  <div class="entry-layout">
+    <slot />
+    <aside class="entry-aside" aria-label="Related">
+      <slot name="aside" />
+    </aside>
+    <div class="entry-back">
+      <BackButton fallback={backFallback} fallbackLabel={backLabel} />
+    </div>
+  </div>
+</div>

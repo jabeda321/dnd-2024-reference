@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import AppShell from '../../layouts/AppShell.astro';
-import BackButton from '../../components/BackButton.astro';
+import EntryLayout from '../../components/EntryLayout.astro';
 import FavButton from '../../components/FavButton.astro';
 import Icon from '../../components/Icon.astro';
 import WeaponChips from '../../components/WeaponChips.astro';
@@ -34,80 +34,115 @@ const sameGroup = weapons.filter((w) => weaponGroup(w) === group && w.slug !== w
   section="weapons"
   description={`${weapon.name}: ${group} weapon, ${weapon.damage.dice} ${weapon.damage.type}, mastery ${mastery.name}. ${weapon.propertiesText}.`}
 >
-  <article class="entry" data-doc-id={id}>
-    <div>
-      <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <ol>
-          <li><a href={url('weapons/')}>Weapons</a></li>
-          <li><a href={url(`weapons/?category=${weapon.category}&kind=${weapon.kind}`)}>{group}</a></li>
-          <li aria-current="page">{weapon.name}</li>
-        </ol>
-      </nav>
-      <header class="entry-head">
-        <div class="entry-title-row">
-          <h1>{weapon.name}</h1>
-          <FavButton id={id} name={weapon.name} size={24} />
-        </div>
-        <div class="entry-meta">
-          <span class="badge badge-crimson">{group}</span>
-        </div>
-      </header>
-    </div>
-
-    <dl class="stat-grid">
-      <div class="stat"><dt>Damage</dt><dd>{weapon.damage.dice} {weapon.damage.type}</dd></div>
-      <div class="stat"><dt>Mastery</dt><dd><a href={masteryUrl(mastery.slug)}>{mastery.name}</a></dd></div>
-      <div class="stat"><dt>Weight</dt><dd>{weapon.weight}</dd></div>
-      <div class="stat"><dt>Cost</dt><dd>{weapon.cost}</dd></div>
-    </dl>
-
-    <section aria-labelledby="mastery-h">
-      <h2 class="panel-title" id="mastery-h"><Icon name="sparkles" size={16} />Mastery</h2>
-      <div class="def-item mastery-def">
-        <h3><a href={masteryUrl(mastery.slug)}>{mastery.name}</a></h3>
-        <div class="prose" set:html={linkTerms(mastery.body, `masteries/${mastery.slug}`, 'weapons')} />
-      </div>
-    </section>
-
-    <section aria-labelledby="props-h">
-      <h2 class="panel-title" id="props-h"><Icon name="tag" size={16} />Properties</h2>
-      {
-        weapon.properties.length ? (
-          <div class="def-list">
-            {weapon.properties.map((p) => {
-              const rule = propertyBySlug.get(p.slug)!;
-              return (
-                <div class="def-item">
-                  <h3>
-                    <a href={propertyUrl(p.slug)}>{rule.name}</a>
-                    {propertyLabel(p) !== rule.name && <span class="badge">{propertyLabel(p).slice(rule.name.length).trim().replace(/^\(|\)$/g, '')}</span>}
-                  </h3>
-                  <div class="prose" set:html={linkTerms(rule.body, `properties/${p.slug}`, 'weapons')} />
-                </div>
-              );
-            })}
+  <EntryLayout backFallback={url('weapons/')} backLabel="Weapons">
+    <article class="entry" data-doc-id={id}>
+      <div>
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href={url('weapons/')}>Weapons</a></li>
+            <li><a href={url(`weapons/?category=${weapon.category}&kind=${weapon.kind}`)}>{group}</a></li>
+            <li aria-current="page">{weapon.name}</li>
+          </ol>
+        </nav>
+        <header class="entry-head">
+          <div class="entry-title-row">
+            <h1>{weapon.name}</h1>
+            <FavButton id={id} name={weapon.name} size={24} />
           </div>
-        ) : (
-          <p class="muted">This weapon has no properties.</p>
+          <div class="entry-meta">
+            <span class="badge badge-crimson">{group}</span>
+          </div>
+        </header>
+      </div>
+
+      <dl class="stat-grid narrow-only">
+        <div class="stat"><dt>Damage</dt><dd>{weapon.damage.dice} {weapon.damage.type}</dd></div>
+        <div class="stat"><dt>Mastery</dt><dd><a href={masteryUrl(mastery.slug)}>{mastery.name}</a></dd></div>
+        <div class="stat"><dt>Weight</dt><dd>{weapon.weight}</dd></div>
+        <div class="stat"><dt>Cost</dt><dd>{weapon.cost}</dd></div>
+      </dl>
+
+      <section aria-labelledby="mastery-h">
+        <h2 class="panel-title" id="mastery-h"><Icon name="sparkles" size={16} />Mastery</h2>
+        <div class="def-item mastery-def">
+          <h3><a href={masteryUrl(mastery.slug)}>{mastery.name}</a></h3>
+          <div class="prose" set:html={linkTerms(mastery.body, `masteries/${mastery.slug}`, 'weapons')} />
+        </div>
+      </section>
+
+      <section aria-labelledby="props-h">
+        <h2 class="panel-title" id="props-h"><Icon name="tag" size={16} />Properties</h2>
+        {
+          weapon.properties.length ? (
+            <div class="def-list">
+              {weapon.properties.map((p) => {
+                const rule = propertyBySlug.get(p.slug)!;
+                return (
+                  <div class="def-item">
+                    <h3>
+                      <a href={propertyUrl(p.slug)}>{rule.name}</a>
+                      {propertyLabel(p) !== rule.name && <span class="badge">{propertyLabel(p).slice(rule.name.length).trim().replace(/^\(|\)$/g, '')}</span>}
+                    </h3>
+                    <div class="prose" set:html={linkTerms(rule.body, `properties/${p.slug}`, 'weapons')} />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p class="muted">This weapon has no properties.</p>
+          )
+        }
+      </section>
+    </article>
+
+    <Fragment slot="aside">
+      <section class="panel panel-accent wide-only" aria-labelledby="glance-h">
+        <h2 class="panel-title" id="glance-h"><Icon name="sword" size={16} />At a glance</h2>
+        <dl class="glance">
+          <div><dt>Damage</dt><dd>{weapon.damage.dice} {weapon.damage.type}</dd></div>
+          <div><dt>Mastery</dt><dd><a href={masteryUrl(mastery.slug)}>{mastery.name}</a></dd></div>
+          <div>
+            <dt>Properties</dt>
+            <dd>
+              {
+                weapon.properties.length ? (
+                  <ul class="glance-list">
+                    {weapon.properties.map((p) => {
+                      const name = propertyBySlug.get(p.slug)!.name;
+                      const extra = propertyLabel(p).slice(name.length).trim();
+                      return (
+                        <li>
+                          <a href={propertyUrl(p.slug)}>{name}</a>
+                          {extra && <small> {extra}</small>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  '—'
+                )
+              }
+            </dd>
+          </div>
+          <div><dt>Weight</dt><dd>{weapon.weight}</dd></div>
+          <div><dt>Cost</dt><dd>{weapon.cost}</dd></div>
+        </dl>
+      </section>
+
+      {
+        sameMastery.length > 0 && (
+          <section class="panel" aria-labelledby="same-mastery">
+            <h2 class="panel-title" id="same-mastery"><Icon name="sparkles" size={16} />Other {mastery.name} weapons</h2>
+            <WeaponChips weapons={sameMastery} />
+          </section>
         )
       }
-    </section>
-
-    {
-      sameMastery.length > 0 && (
-        <section class="panel panel-accent" aria-labelledby="same-mastery">
-          <h2 class="panel-title" id="same-mastery"><Icon name="sparkles" size={16} />Other {mastery.name} weapons</h2>
-          <WeaponChips weapons={sameMastery} />
-        </section>
-      )
-    }
-    <section class="panel" aria-labelledby="same-group">
-      <h2 class="panel-title" id="same-group"><Icon name="swords" size={16} />Other {group} weapons</h2>
-      <WeaponChips weapons={sameGroup} />
-    </section>
-
-    <BackButton fallback={url('weapons/')} fallbackLabel="Weapons" />
-  </article>
+      <section class="panel" aria-labelledby="same-group">
+        <h2 class="panel-title" id="same-group"><Icon name="swords" size={16} />Other {group} weapons</h2>
+        <WeaponChips weapons={sameGroup} />
+      </section>
+    </Fragment>
+  </EntryLayout>
 </AppShell>
 
 <style>

@@ -738,6 +738,66 @@
   .pager small { color: var(--text-muted); font-size: 0.75rem; }
   .pager .next { text-align: end; grid-column: 2; }
 
+  /* ---- Entry layout: text column + related side column ------------------ */
+  .entry-wrap { container: entry / inline-size; }
+  .entry-layout { display: grid; gap: var(--space-xl); }
+  .entry-layout > .entry { max-inline-size: none; }
+  .entry-aside { display: grid; align-content: start; gap: var(--space-m); min-inline-size: 0; }
+  .entry-aside:empty { display: none; }
+  .entry-body { padding: clamp(var(--space-m), 3.5cqi, var(--space-xl)); box-shadow: var(--shadow-sm); }
+  .entry-body-note {
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+  .entry-aside .panel { padding: var(--space-m); }
+
+  .glance { display: grid; margin: 0; }
+  .glance > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-s);
+    padding-block: var(--space-xs);
+  }
+  .glance > div + div { border-block-start: 1px solid var(--border); }
+  .glance dt { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .glance dd { font-weight: 650; font-variant-numeric: tabular-nums; text-align: end; }
+  .glance dd a { text-decoration: none; }
+  .glance-list { display: grid; justify-items: end; gap: 2px; list-style: none; padding: 0; }
+  .glance-list small { color: var(--text-muted); font-weight: 500; }
+  .aside-more { display: inline-block; margin-block-start: var(--space-s); font-size: var(--step--1); font-weight: 600; text-decoration: none; }
+  .aside-more:hover { text-decoration: underline; }
+
+  /* Only shown once the side column exists; the inline version covers narrow screens. */
+  .wide-only { display: none; }
+
+  @container entry (width >= 56rem) {
+    .entry-layout {
+      grid-template-columns: minmax(0, 54rem) 18rem;
+      grid-template-rows: auto 1fr;
+      justify-content: center;
+      column-gap: var(--space-xl);
+    }
+    .entry-layout > .entry { grid-column: 1; grid-row: 1; }
+    .entry-back { grid-column: 1; grid-row: 2; }
+    .entry-aside {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      position: sticky;
+      inset-block-start: calc(var(--header-h) + var(--space-l));
+      align-self: start;
+      max-block-size: calc(100dvh - var(--header-h) - var(--space-2xl));
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .wide-only { display: block; }
+    .narrow-only { display: none; }
+  }
+
   /* ---- Back button ------------------------------------------------------ */
   .back-row { display: flex; justify-content: center; }
   .back-btn {

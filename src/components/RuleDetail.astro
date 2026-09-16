@@ -1,6 +1,6 @@
 ---
 // Detail page body shared by a single Weapon Mastery or Weapon Property.
-import BackButton from './BackButton.astro';
+import EntryLayout from './EntryLayout.astro';
 import FavButton from './FavButton.astro';
 import Icon from './Icon.astro';
 import WeaponChips from './WeaponChips.astro';
@@ -20,57 +20,61 @@ const { kind, label, indexHref, indexLabel, rule, weapons, siblings } = Astro.pr
 const id = `${kind}/${rule.slug}`;
 ---
 
-<article class="entry" data-doc-id={id}>
-  <div>
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <ol>
-        <li><a href={indexHref}>{indexLabel}</a></li>
-        <li aria-current="page">{rule.name}</li>
-      </ol>
-    </nav>
-    <header class="entry-head">
-      <div class="entry-title-row">
-        <h1>{rule.name}</h1>
-        <FavButton id={id} name={rule.name} size={24} />
-      </div>
-      <div class="entry-meta">
-        <span class:list={['badge', kind === 'masteries' ? 'badge-gold' : 'badge-crimson']}>{label}</span>
-      </div>
-    </header>
-  </div>
-
-  <div class="prose" set:html={linkTerms(rule.body, id, 'weapons')} />
-
-  {
-    weapons.length > 0 && (
-      <section class="panel panel-accent" aria-labelledby="weapons-with">
-        <h2 class="panel-title" id="weapons-with">
-          <Icon name="swords" size={16} />
-          Weapons with {rule.name} ({weapons.length})
-        </h2>
-        <WeaponChips weapons={weapons} />
-      </section>
-    )
-  }
-
-  <section class="panel" aria-labelledby="others">
-    <h2 class="panel-title" id="others">
-      <Icon name={kind === 'masteries' ? 'sparkles' : 'tag'} size={16} />
-      All {indexLabel.toLowerCase()}
-    </h2>
-    <div class="chips">
-      {
-        siblings.map((s) => (
-          <a class="chip" href={s.href} aria-current={s.current ? 'page' : undefined}>
-            {s.name}
-          </a>
-        ))
-      }
+<EntryLayout backFallback={indexHref} backLabel={indexLabel}>
+  <article class="entry" data-doc-id={id}>
+    <div>
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href={indexHref}>{indexLabel}</a></li>
+          <li aria-current="page">{rule.name}</li>
+        </ol>
+      </nav>
+      <header class="entry-head">
+        <div class="entry-title-row">
+          <h1>{rule.name}</h1>
+          <FavButton id={id} name={rule.name} size={24} />
+        </div>
+        <div class="entry-meta">
+          <span class:list={['badge', kind === 'masteries' ? 'badge-gold' : 'badge-crimson']}>{label}</span>
+        </div>
+      </header>
     </div>
-  </section>
 
-  <BackButton fallback={indexHref} fallbackLabel={indexLabel} />
-</article>
+    <div class="panel entry-body">
+      <div class="prose" set:html={linkTerms(rule.body, id, 'weapons')} />
+    </div>
+  </article>
+
+  <Fragment slot="aside">
+    {
+      weapons.length > 0 && (
+        <section class="panel panel-accent" aria-labelledby="weapons-with">
+          <h2 class="panel-title" id="weapons-with">
+            <Icon name="swords" size={16} />
+            Weapons with {rule.name} ({weapons.length})
+          </h2>
+          <WeaponChips weapons={weapons} />
+        </section>
+      )
+    }
+
+    <section class="panel" aria-labelledby="others">
+      <h2 class="panel-title" id="others">
+        <Icon name={kind === 'masteries' ? 'sparkles' : 'tag'} size={16} />
+        All {indexLabel.toLowerCase()}
+      </h2>
+      <div class="chips">
+        {
+          siblings.map((s) => (
+            <a class="chip" href={s.href} aria-current={s.current ? 'page' : undefined}>
+              {s.name}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </Fragment>
+</EntryLayout>
 
 <style>
   .chip[aria-current='page'] { background: var(--crimson-fill); border-color: var(--crimson-fill); color: var(--on-crimson); }
