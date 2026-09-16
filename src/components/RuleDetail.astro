@@ -1,5 +1,6 @@
 ---
 // Detail page body shared by a single Weapon Mastery or Weapon Property.
+import BackButton from './BackButton.astro';
 import FavButton from './FavButton.astro';
 import Icon from './Icon.astro';
 import WeaponChips from './WeaponChips.astro';
@@ -67,6 +68,8 @@ const id = `${kind}/${rule.slug}`;
       }
     </div>
   </section>
+
+  <BackButton fallback={indexHref} fallbackLabel={indexLabel} />
 </article>
 
 <style>

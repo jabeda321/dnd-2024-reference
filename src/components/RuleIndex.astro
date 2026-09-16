@@ -51,15 +51,19 @@ const { kind, rules, intro, hrefFor, weaponsFor } = Astro.props;
 </div>
 
 <style>
-  .intro { color: var(--text-muted); }
+  .intro { color: var(--text-muted); max-inline-size: var(--entry-w); }
   .jump { margin-block: var(--space-l); }
-  .def-list { gap: var(--space-m); }
+  .def-list {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+    gap: var(--space-m);
+  }
   .def-item {
     padding: var(--space-l);
     border-radius: var(--radius-l);
     scroll-margin-block-start: calc(var(--header-h) + var(--space-m));
   }
   .def-item:target { border-color: var(--gold-line); box-shadow: 0 0 0 3px var(--gold-soft); }
+  .def-item .entry-title-row { align-items: center; }
   .def-item h2 { font-size: var(--step-2); }
   .def-item h2 a { color: inherit; text-decoration: none; }
   .def-item h2 a:hover { color: var(--crimson); }

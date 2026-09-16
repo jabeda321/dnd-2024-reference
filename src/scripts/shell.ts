@@ -291,6 +291,27 @@ function initTooltips() {
 }
 
 // ---------------------------------------------------------------------------
+// Back button
+// ---------------------------------------------------------------------------
+
+function initBackButtons() {
+  let cameFromSite = false;
+  try {
+    cameFromSite = !!document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1;
+  } catch {
+    /* malformed referrer */
+  }
+  document.querySelectorAll<HTMLAnchorElement>('[data-back]').forEach((btn) => {
+    if (!cameFromSite) return;
+    btn.querySelector('[data-back-label]')!.textContent = 'Back';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      history.back();
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
 
 function registerServiceWorker() {
   if (import.meta.env.PROD && 'serviceWorker' in navigator) {
@@ -305,5 +326,6 @@ export function initShell() {
   initPalette();
   initFavourites();
   initTooltips();
+  initBackButtons();
   registerServiceWorker();
 }

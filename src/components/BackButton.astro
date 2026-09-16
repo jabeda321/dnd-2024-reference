@@ -1,0 +1,19 @@
+---
+// Centred "Back" button. Goes back in history when the visitor came from this site,
+// otherwise falls back to the parent index page (e.g. when opened from a shared link).
+import Icon from './Icon.astro';
+
+interface Props {
+  fallback: string;
+  fallbackLabel: string;
+}
+
+const { fallback, fallbackLabel } = Astro.props;
+---
+
+<div class="back-row">
+  <a class="btn back-btn" href={fallback} data-back data-fallback-label={fallbackLabel}>
+    <Icon name="chevronLeft" size={18} />
+    <span data-back-label>Back to {fallbackLabel}</span>
+  </a>
+</div>

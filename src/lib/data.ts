@@ -105,6 +105,10 @@ export function propertyLabel(p: WeaponProperty) {
 export const stripHtml = (html: string) =>
   html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
+/** Wrap tables so wide ones scroll on small screens while still filling the column. */
+export const wrapTables = (html: string) =>
+  html.replace(/<table>/g, '<div class="table-scroll"><table>').replace(/<\/table>/g, '</table></div>');
+
 // ---------------------------------------------------------------------------
 // Term auto-linking
 // ---------------------------------------------------------------------------

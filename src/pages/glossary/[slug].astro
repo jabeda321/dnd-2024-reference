@@ -2,8 +2,9 @@
 import type { GetStaticPaths } from 'astro';
 import AppShell from '../../layouts/AppShell.astro';
 import FavButton from '../../components/FavButton.astro';
+import BackButton from '../../components/BackButton.astro';
 import Icon from '../../components/Icon.astro';
-import { categoryMeta, glossary, glossaryBySlug, glossaryUrl, linkTerms, url, type GlossaryEntry } from '../../lib/data';
+import { categoryMeta, glossary, glossaryBySlug, glossaryUrl, linkTerms, url, wrapTables, type GlossaryEntry } from '../../lib/data';
 
 export const getStaticPaths = (() =>
   glossary.map((entry, i) => ({
@@ -20,7 +21,7 @@ interface Props {
 const { entry, prev, next } = Astro.props;
 const id = `glossary/${entry.slug}`;
 const cat = categoryMeta(entry.category);
-const body = linkTerms(entry.body, id);
+const body = wrapTables(linkTerms(entry.body, id));
 const seeAlso = entry.seeAlso.map((s) => glossaryBySlug.get(s)).filter((e): e is GlossaryEntry => !!e);
 // Tag families (e.g. every [Condition]) make a useful "related" list.
 const family = entry.tag
@@ -98,5 +99,7 @@ const tagEntry = entry.tag ? glossary.find((e) => e.title === entry.tag && !e.ta
       {prev && <a class="prev" href={glossaryUrl(prev.slug)} rel="prev"><small>← Previous</small>{prev.title}</a>}
       {next && <a class="next" href={glossaryUrl(next.slug)} rel="next"><small>Next →</small>{next.title}</a>}
     </nav>
+
+    <BackButton fallback={url('glossary/')} fallbackLabel="Rules Glossary" />
   </article>
 </AppShell>

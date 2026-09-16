@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import AppShell from '../../layouts/AppShell.astro';
+import BackButton from '../../components/BackButton.astro';
 import FavButton from '../../components/FavButton.astro';
 import Icon from '../../components/Icon.astro';
 import WeaponChips from '../../components/WeaponChips.astro';
@@ -104,6 +105,8 @@ const sameGroup = weapons.filter((w) => weaponGroup(w) === group && w.slug !== w
       <h2 class="panel-title" id="same-group"><Icon name="swords" size={16} />Other {group} weapons</h2>
       <WeaponChips weapons={sameGroup} />
     </section>
+
+    <BackButton fallback={url('weapons/')} fallbackLabel="Weapons" />
   </article>
 </AppShell>
 
