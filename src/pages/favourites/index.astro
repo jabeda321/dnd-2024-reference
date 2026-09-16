@@ -1,0 +1,77 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import Icon from '../../components/Icon.astro';
+import { url } from '../../lib/data';
+---
+
+<AppShell title="Favourites" section="favourites" description="Your saved rules, weapons and masteries, stored on this device.">
+  <header class="page-head">
+    <p class="eyebrow"><Icon name="star" size={16} />Saved on this device</p>
+    <h1>Favourites</h1>
+    <p class="lede">Star any rule, weapon, mastery or property to keep it here for quick lookup at the table.</p>
+  </header>
+
+  <div class="card-grid" data-fav-grid aria-live="polite"></div>
+
+  <div class="empty-state" hidden data-fav-empty>
+    <Icon name="star" size={32} />
+    <p><strong>No favourites yet.</strong></p>
+    <p>Tap the star on any entry to save it here.</p>
+    <p><a class="btn btn-primary" href={url('glossary/')}>Browse the glossary</a></p>
+  </div>
+
+  <template id="fav-card">
+    <article class="card">
+      <div class="card-top">
+        <h2 class="card-title"><a class="card-link"></a></h2>
+        <button class="icon-btn fav-btn" type="button" aria-pressed="true"><Icon name="star" size={18} /></button>
+      </div>
+      <p class="card-summary"></p>
+      <div class="card-meta"><span class="badge"></span></div>
+    </article>
+  </template>
+</AppShell>
+
+<script>
+  import { getFavourites, loadIndex } from '../../scripts/store';
+
+  const grid = document.querySelector<HTMLElement>('[data-fav-grid]')!;
+  const empty = document.querySelector<HTMLElement>('[data-fav-empty]')!;
+  const tpl = document.querySelector<HTMLTemplateElement>('#fav-card')!;
+  const KIND: Record<string, string> = { weapon: 'Weapon', mastery: 'Mastery', property: 'Property' };
+
+  async function render() {
+    const favs = getFavourites();
+    let docs: Awaited<ReturnType<typeof loadIndex>> = [];
+    try {
+      docs = await loadIndex();
+    } catch {
+      /* offline before first load */
+    }
+    const byId = new Map(docs.map((d) => [d.id, d]));
+    grid.replaceChildren(
+      ...favs
+        .map((id) => byId.get(id))
+        .filter((d) => !!d)
+        .map((d) => {
+          const node = tpl.content.cloneNode(true) as DocumentFragment;
+          const link = node.querySelector<HTMLAnchorElement>('.card-link')!;
+          link.href = d!.url;
+          link.textContent = d!.title;
+          node.querySelector('.card-summary')!.textContent = d!.summary;
+          const badge = node.querySelector<HTMLElement>('.badge')!;
+          badge.textContent = d!.kind === 'rule' ? d!.label : KIND[d!.kind];
+          if (d!.kind === 'mastery') badge.classList.add('badge-gold');
+          const btn = node.querySelector<HTMLButtonElement>('.fav-btn')!;
+          btn.dataset.fav = d!.id;
+          btn.dataset.favName = d!.title;
+          btn.setAttribute('aria-label', `Remove ${d!.title} from favourites`);
+          return node;
+        }),
+    );
+    empty.hidden = grid.children.length > 0;
+  }
+
+  document.addEventListener('favourites-change', render);
+  render();
+</script>

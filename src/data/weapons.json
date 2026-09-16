@@ -1,0 +1,974 @@
+[
+  {
+    "slug": "club",
+    "name": "Club",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d4",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "light"
+      }
+    ],
+    "propertiesText": "Light",
+    "mastery": "slow",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "1 SP",
+    "costCp": 10
+  },
+  {
+    "slug": "dagger",
+    "name": "Dagger",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d4",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      },
+      {
+        "slug": "light"
+      },
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      }
+    ],
+    "propertiesText": "Finesse, Light, Thrown (Range 20/60)",
+    "mastery": "nick",
+    "weight": "1 lb.",
+    "weightLb": 1,
+    "cost": "2 GP",
+    "costCp": 200
+  },
+  {
+    "slug": "greatclub",
+    "name": "Greatclub",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Two-Handed",
+    "mastery": "push",
+    "weight": "10 lb.",
+    "weightLb": 10,
+    "cost": "2 SP",
+    "costCp": 20
+  },
+  {
+    "slug": "handaxe",
+    "name": "Handaxe",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "light"
+      },
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      }
+    ],
+    "propertiesText": "Light, Thrown (Range 20/60)",
+    "mastery": "vex",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "5 GP",
+    "costCp": 500
+  },
+  {
+    "slug": "javelin",
+    "name": "Javelin",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 30,
+          "long": 120
+        }
+      }
+    ],
+    "propertiesText": "Thrown (Range 30/120)",
+    "mastery": "slow",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "5 SP",
+    "costCp": 50
+  },
+  {
+    "slug": "light-hammer",
+    "name": "Light Hammer",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d4",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "light"
+      },
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      }
+    ],
+    "propertiesText": "Light, Thrown (Range 20/60)",
+    "mastery": "nick",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "2 GP",
+    "costCp": 200
+  },
+  {
+    "slug": "mace",
+    "name": "Mace",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Bludgeoning"
+    },
+    "properties": [],
+    "propertiesText": "—",
+    "mastery": "sap",
+    "weight": "4 lb.",
+    "weightLb": 4,
+    "cost": "5 GP",
+    "costCp": 500
+  },
+  {
+    "slug": "quarterstaff",
+    "name": "Quarterstaff",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "versatile",
+        "dice": "1d8"
+      }
+    ],
+    "propertiesText": "Versatile (1d8)",
+    "mastery": "topple",
+    "weight": "4 lb.",
+    "weightLb": 4,
+    "cost": "2 SP",
+    "costCp": 20
+  },
+  {
+    "slug": "sickle",
+    "name": "Sickle",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d4",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "light"
+      }
+    ],
+    "propertiesText": "Light",
+    "mastery": "nick",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "1 GP",
+    "costCp": 100
+  },
+  {
+    "slug": "spear",
+    "name": "Spear",
+    "category": "simple",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      },
+      {
+        "slug": "versatile",
+        "dice": "1d8"
+      }
+    ],
+    "propertiesText": "Thrown (Range 20/60), Versatile (1d8)",
+    "mastery": "sap",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "1 GP",
+    "costCp": 100
+  },
+  {
+    "slug": "dart",
+    "name": "Dart",
+    "category": "simple",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d4",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      },
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      }
+    ],
+    "propertiesText": "Finesse, Thrown (Range 20/60)",
+    "mastery": "vex",
+    "weight": "1/4 lb.",
+    "weightLb": 0.25,
+    "cost": "5 CP",
+    "costCp": 5
+  },
+  {
+    "slug": "light-crossbow",
+    "name": "Light Crossbow",
+    "category": "simple",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 80,
+          "long": 320
+        },
+        "ammo": "Bolt"
+      },
+      {
+        "slug": "loading"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 80/320; Bolt), Loading, Two-Handed",
+    "mastery": "slow",
+    "weight": "5 lb.",
+    "weightLb": 5,
+    "cost": "25 GP",
+    "costCp": 2500
+  },
+  {
+    "slug": "shortbow",
+    "name": "Shortbow",
+    "category": "simple",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d6",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 80,
+          "long": 320
+        },
+        "ammo": "Arrow"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 80/320; Arrow), Two-Handed",
+    "mastery": "vex",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "25 GP",
+    "costCp": 2500
+  },
+  {
+    "slug": "sling",
+    "name": "Sling",
+    "category": "simple",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d4",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 30,
+          "long": 120
+        },
+        "ammo": "Bullet"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 30/120; Bullet)",
+    "mastery": "slow",
+    "weight": "—",
+    "weightLb": 0,
+    "cost": "1 SP",
+    "costCp": 10
+  },
+  {
+    "slug": "battleaxe",
+    "name": "Battleaxe",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "versatile",
+        "dice": "1d10"
+      }
+    ],
+    "propertiesText": "Versatile (1d10)",
+    "mastery": "topple",
+    "weight": "4 lb.",
+    "weightLb": 4,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "flail",
+    "name": "Flail",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Bludgeoning"
+    },
+    "properties": [],
+    "propertiesText": "—",
+    "mastery": "sap",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "glaive",
+    "name": "Glaive",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d10",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "reach"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Reach, Two-Handed",
+    "mastery": "graze",
+    "weight": "6 lb.",
+    "weightLb": 6,
+    "cost": "20 GP",
+    "costCp": 2000
+  },
+  {
+    "slug": "greataxe",
+    "name": "Greataxe",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d12",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Two-Handed",
+    "mastery": "cleave",
+    "weight": "7 lb.",
+    "weightLb": 7,
+    "cost": "30 GP",
+    "costCp": 3000
+  },
+  {
+    "slug": "greatsword",
+    "name": "Greatsword",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "2d6",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Two-Handed",
+    "mastery": "graze",
+    "weight": "6 lb.",
+    "weightLb": 6,
+    "cost": "50 GP",
+    "costCp": 5000
+  },
+  {
+    "slug": "halberd",
+    "name": "Halberd",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d10",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "reach"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Reach, Two-Handed",
+    "mastery": "cleave",
+    "weight": "6 lb.",
+    "weightLb": 6,
+    "cost": "20 GP",
+    "costCp": 2000
+  },
+  {
+    "slug": "lance",
+    "name": "Lance",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d10",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "reach"
+      },
+      {
+        "slug": "two-handed",
+        "note": "unless mounted"
+      }
+    ],
+    "propertiesText": "Heavy, Reach, Two-Handed (unless mounted)",
+    "mastery": "topple",
+    "weight": "6 lb.",
+    "weightLb": 6,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "longsword",
+    "name": "Longsword",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "versatile",
+        "dice": "1d10"
+      }
+    ],
+    "propertiesText": "Versatile (1d10)",
+    "mastery": "sap",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "15 GP",
+    "costCp": 1500
+  },
+  {
+    "slug": "maul",
+    "name": "Maul",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "2d6",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Two-Handed",
+    "mastery": "topple",
+    "weight": "10 lb.",
+    "weightLb": 10,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "morningstar",
+    "name": "Morningstar",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [],
+    "propertiesText": "—",
+    "mastery": "sap",
+    "weight": "4 lb.",
+    "weightLb": 4,
+    "cost": "15 GP",
+    "costCp": 1500
+  },
+  {
+    "slug": "pike",
+    "name": "Pike",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d10",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "reach"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Heavy, Reach, Two-Handed",
+    "mastery": "push",
+    "weight": "18 lb.",
+    "weightLb": 18,
+    "cost": "5 GP",
+    "costCp": 500
+  },
+  {
+    "slug": "rapier",
+    "name": "Rapier",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      }
+    ],
+    "propertiesText": "Finesse",
+    "mastery": "vex",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "25 GP",
+    "costCp": 2500
+  },
+  {
+    "slug": "scimitar",
+    "name": "Scimitar",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      },
+      {
+        "slug": "light"
+      }
+    ],
+    "propertiesText": "Finesse, Light",
+    "mastery": "nick",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "25 GP",
+    "costCp": 2500
+  },
+  {
+    "slug": "shortsword",
+    "name": "Shortsword",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d6",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      },
+      {
+        "slug": "light"
+      }
+    ],
+    "propertiesText": "Finesse, Light",
+    "mastery": "vex",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "trident",
+    "name": "Trident",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "thrown",
+        "range": {
+          "normal": 20,
+          "long": 60
+        }
+      },
+      {
+        "slug": "versatile",
+        "dice": "1d10"
+      }
+    ],
+    "propertiesText": "Thrown (Range 20/60), Versatile (1d10)",
+    "mastery": "topple",
+    "weight": "4 lb.",
+    "weightLb": 4,
+    "cost": "5 GP",
+    "costCp": 500
+  },
+  {
+    "slug": "warhammer",
+    "name": "Warhammer",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Bludgeoning"
+    },
+    "properties": [
+      {
+        "slug": "versatile",
+        "dice": "1d10"
+      }
+    ],
+    "propertiesText": "Versatile (1d10)",
+    "mastery": "push",
+    "weight": "5 lb.",
+    "weightLb": 5,
+    "cost": "15 GP",
+    "costCp": 1500
+  },
+  {
+    "slug": "war-pick",
+    "name": "War Pick",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "versatile",
+        "dice": "1d10"
+      }
+    ],
+    "propertiesText": "Versatile (1d10)",
+    "mastery": "sap",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "5 GP",
+    "costCp": 500
+  },
+  {
+    "slug": "whip",
+    "name": "Whip",
+    "category": "martial",
+    "kind": "melee",
+    "damage": {
+      "dice": "1d4",
+      "type": "Slashing"
+    },
+    "properties": [
+      {
+        "slug": "finesse"
+      },
+      {
+        "slug": "reach"
+      }
+    ],
+    "propertiesText": "Finesse, Reach",
+    "mastery": "slow",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "2 GP",
+    "costCp": 200
+  },
+  {
+    "slug": "blowgun",
+    "name": "Blowgun",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 25,
+          "long": 100
+        },
+        "ammo": "Needle"
+      },
+      {
+        "slug": "loading"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 25/100; Needle), Loading",
+    "mastery": "vex",
+    "weight": "1 lb.",
+    "weightLb": 1,
+    "cost": "10 GP",
+    "costCp": 1000
+  },
+  {
+    "slug": "hand-crossbow",
+    "name": "Hand Crossbow",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d6",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 30,
+          "long": 120
+        },
+        "ammo": "Bolt"
+      },
+      {
+        "slug": "light"
+      },
+      {
+        "slug": "loading"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 30/120; Bolt), Light, Loading",
+    "mastery": "vex",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "75 GP",
+    "costCp": 7500
+  },
+  {
+    "slug": "heavy-crossbow",
+    "name": "Heavy Crossbow",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d10",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 100,
+          "long": 400
+        },
+        "ammo": "Bolt"
+      },
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "loading"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 100/400; Bolt), Heavy, Loading, Two-Handed",
+    "mastery": "push",
+    "weight": "18 lb.",
+    "weightLb": 18,
+    "cost": "50 GP",
+    "costCp": 5000
+  },
+  {
+    "slug": "longbow",
+    "name": "Longbow",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d8",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 150,
+          "long": 600
+        },
+        "ammo": "Arrow"
+      },
+      {
+        "slug": "heavy"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 150/600; Arrow), Heavy, Two-Handed",
+    "mastery": "slow",
+    "weight": "2 lb.",
+    "weightLb": 2,
+    "cost": "50 GP",
+    "costCp": 5000
+  },
+  {
+    "slug": "musket",
+    "name": "Musket",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d12",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 40,
+          "long": 120
+        },
+        "ammo": "Bullet"
+      },
+      {
+        "slug": "loading"
+      },
+      {
+        "slug": "two-handed"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 40/120; Bullet), Loading, Two-Handed",
+    "mastery": "slow",
+    "weight": "10 lb.",
+    "weightLb": 10,
+    "cost": "500 GP",
+    "costCp": 50000
+  },
+  {
+    "slug": "pistol",
+    "name": "Pistol",
+    "category": "martial",
+    "kind": "ranged",
+    "damage": {
+      "dice": "1d10",
+      "type": "Piercing"
+    },
+    "properties": [
+      {
+        "slug": "ammunition",
+        "range": {
+          "normal": 30,
+          "long": 90
+        },
+        "ammo": "Bullet"
+      },
+      {
+        "slug": "loading"
+      }
+    ],
+    "propertiesText": "Ammunition (Range 30/90; Bullet), Loading",
+    "mastery": "vex",
+    "weight": "3 lb.",
+    "weightLb": 3,
+    "cost": "250 GP",
+    "costCp": 25000
+  }
+]

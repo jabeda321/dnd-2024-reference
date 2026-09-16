@@ -1,0 +1,17 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/data';
+---
+
+<AppShell title="Page not found" section="home">
+  <div class="empty-state">
+    <Icon name="d20" size={40} />
+    <h1>Natural 1</h1>
+    <p>That page doesn’t exist, or you’re offline and it hasn’t been saved yet.</p>
+    <p>
+      <button class="btn btn-primary" type="button" data-open-search>Search instead</button>
+      <a class="btn" href={url()}>Go home</a>
+    </p>
+  </div>
+</AppShell>

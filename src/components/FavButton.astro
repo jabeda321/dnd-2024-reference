@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  id: string;
+  name: string;
+  size?: number;
+}
+
+const { id, name, size = 20 } = Astro.props;
+---
+
+<button class="icon-btn fav-btn" type="button" data-fav={id} data-fav-name={name} aria-pressed="false" aria-label={`Add ${name} to favourites`}>
+  <Icon name="star" size={size} />
+</button>

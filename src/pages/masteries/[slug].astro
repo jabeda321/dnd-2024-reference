@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths } from 'astro';
+import AppShell from '../../layouts/AppShell.astro';
+import RuleDetail from '../../components/RuleDetail.astro';
+import { masteries, masteryUrl, url, weaponsWithMastery, type Rule } from '../../lib/data';
+
+export const getStaticPaths = (() =>
+  masteries.map((rule) => ({ params: { slug: rule.slug }, props: { rule } }))) satisfies GetStaticPaths;
+
+const { rule } = Astro.props as { rule: Rule };
+const siblings = masteries.map((m) => ({ name: m.name, href: masteryUrl(m.slug), current: m.slug === rule.slug }));
+---
+
+<AppShell title={`${rule.name} (Weapon Mastery)`} section="masteries" description={rule.summary}>
+  <RuleDetail
+    kind="masteries"
+    label="Weapon Mastery"
+    indexHref={url('masteries/')}
+    indexLabel="Weapon Masteries"
+    rule={rule}
+    weapons={weaponsWithMastery(rule.slug)}
+    siblings={siblings}
+  />
+</AppShell>

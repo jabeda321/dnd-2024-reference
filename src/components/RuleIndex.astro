@@ -1,0 +1,67 @@
+---
+// Index page body shared by Weapon Masteries and Weapon Properties.
+import FavButton from './FavButton.astro';
+import Icon from './Icon.astro';
+import WeaponChips from './WeaponChips.astro';
+import { linkTerms, type Rule, type Weapon } from '../lib/data';
+
+interface Props {
+  kind: 'masteries' | 'properties';
+  rules: Rule[];
+  intro: string;
+  hrefFor: (slug: string) => string;
+  weaponsFor: (slug: string) => Weapon[];
+}
+
+const { kind, rules, intro, hrefFor, weaponsFor } = Astro.props;
+---
+
+<div class="prose intro" set:html={linkTerms(intro, '', 'weapons')} />
+
+<nav class="chips-scroll jump" aria-label="Jump to">
+  {rules.map((r) => <a class="chip" href={`#${r.slug}`}>{r.name}</a>)}
+</nav>
+
+<div class="def-list">
+  {
+    rules.map((r) => {
+      const list = weaponsFor(r.slug);
+      return (
+        <section class="def-item" id={r.slug} aria-labelledby={`h-${r.slug}`}>
+          <div class="entry-title-row">
+            <h2 id={`h-${r.slug}`}>
+              <a href={hrefFor(r.slug)}>{r.name}</a>
+            </h2>
+            <FavButton id={`${kind}/${r.slug}`} name={r.name} />
+          </div>
+          <div class="prose" set:html={linkTerms(r.body, `${kind}/${r.slug}`, 'weapons')} />
+          {list.length > 0 && (
+            <div class="weapons-using">
+              <p class="panel-title">
+                <Icon name="swords" size={15} />
+                {list.length} weapon{list.length === 1 ? '' : 's'}
+              </p>
+              <WeaponChips weapons={list} />
+            </div>
+          )}
+        </section>
+      );
+    })
+  }
+</div>
+
+<style>
+  .intro { color: var(--text-muted); }
+  .jump { margin-block: var(--space-l); }
+  .def-list { gap: var(--space-m); }
+  .def-item {
+    padding: var(--space-l);
+    border-radius: var(--radius-l);
+    scroll-margin-block-start: calc(var(--header-h) + var(--space-m));
+  }
+  .def-item:target { border-color: var(--gold-line); box-shadow: 0 0 0 3px var(--gold-soft); }
+  .def-item h2 { font-size: var(--step-2); }
+  .def-item h2 a { color: inherit; text-decoration: none; }
+  .def-item h2 a:hover { color: var(--crimson); }
+  .weapons-using { margin-block-start: var(--space-m); }
+</style>

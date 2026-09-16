@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+
+const kinds = [
+  { value: '', label: 'All' },
+  { value: 'rule', label: 'Rules' },
+  { value: 'weapon', label: 'Weapons' },
+  { value: 'mastery', label: 'Masteries' },
+  { value: 'property', label: 'Properties' },
+];
+---
+
+<dialog class="palette" id="search-palette" aria-label="Search">
+  <div class="palette-input-row">
+    <Icon name="search" />
+    <input
+      class="palette-input"
+      id="palette-input"
+      type="search"
+      placeholder="Search rules, weapons, masteries…"
+      autocomplete="off"
+      spellcheck="false"
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="palette-results"
+      aria-autocomplete="list"
+    />
+    <button class="icon-btn" type="button" data-close-search aria-label="Close search"><Icon name="x" /></button>
+  </div>
+  <div class="palette-filters" role="group" aria-label="Filter results">
+    {kinds.map((k, i) => (
+      <button class="chip" type="button" data-kind={k.value} aria-pressed={i === 0 ? 'true' : 'false'}>{k.label}</button>
+    ))}
+  </div>
+  <ul class="palette-results" id="palette-results" role="listbox" aria-label="Results"></ul>
+  <p class="palette-hint" id="palette-status" aria-live="polite"></p>
+  <template id="kind-icons">
+    <span data-kind="rule"><Icon name="book" /></span>
+    <span data-kind="weapon"><Icon name="sword" /></span>
+    <span data-kind="mastery"><Icon name="sparkles" /></span>
+    <span data-kind="property"><Icon name="tag" /></span>
+    <span data-kind="recent"><Icon name="clock" /></span>
+  </template>
+  <div class="palette-footer" aria-hidden="true">
+    <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+    <span><kbd>Enter</kbd> open</span>
+    <span><kbd>Esc</kbd> close</span>
+  </div>
+</dialog>

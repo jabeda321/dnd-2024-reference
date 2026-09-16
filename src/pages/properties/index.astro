@@ -1,0 +1,14 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import Icon from '../../components/Icon.astro';
+import RuleIndex from '../../components/RuleIndex.astro';
+import { properties, propertyUrl, weaponsIntro, weaponsWithProperty } from '../../lib/data';
+---
+
+<AppShell title="Weapon Properties" section="properties" description="Every D&D 2024 weapon property, including Finesse, Heavy, Light, Reach, Thrown and Versatile, with the weapons that have it.">
+  <header class="page-head">
+    <p class="eyebrow"><Icon name="tag" size={16} />Equipment</p>
+    <h1>Weapon Properties</h1>
+  </header>
+  <RuleIndex kind="properties" rules={properties} intro={weaponsIntro.properties} hrefFor={propertyUrl} weaponsFor={weaponsWithProperty} />
+</AppShell>

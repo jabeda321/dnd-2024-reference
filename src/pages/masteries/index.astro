@@ -1,0 +1,14 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import Icon from '../../components/Icon.astro';
+import RuleIndex from '../../components/RuleIndex.astro';
+import { masteries, masteryUrl, weaponsIntro, weaponsWithMastery } from '../../lib/data';
+---
+
+<AppShell title="Weapon Masteries" section="masteries" description="All eight D&D 2024 weapon mastery properties with full rules text and the weapons that use each.">
+  <header class="page-head">
+    <p class="eyebrow"><Icon name="sparkles" size={16} />Equipment</p>
+    <h1>Weapon Masteries</h1>
+  </header>
+  <RuleIndex kind="masteries" rules={masteries} intro={weaponsIntro.masteries} hrefFor={masteryUrl} weaponsFor={weaponsWithMastery} />
+</AppShell>

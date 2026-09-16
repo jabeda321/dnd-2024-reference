@@ -1,0 +1,158 @@
+---
+import '@fontsource/cinzel/600.css';
+import '@fontsource/cinzel/700.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import SearchPalette from '../components/SearchPalette.astro';
+import { CATEGORIES, glossary, masteries, properties, url, weapons } from '../lib/data';
+
+export type Section = 'home' | 'glossary' | 'weapons' | 'masteries' | 'properties' | 'favourites';
+
+interface Props {
+  title: string;
+  description?: string;
+  section: Section;
+  category?: string;
+}
+
+const { title, description = 'Fast, searchable D&D 2024 rules glossary, weapons and weapon masteries — built from the SRD 5.2.1.', section, category } = Astro.props;
+const siteName = 'D&D 2024 Reference';
+const pageTitle = section === 'home' ? siteName : `${title} · ${siteName}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const catCounts = new Map<string, number>();
+for (const e of glossary) catCounts.set(e.category, (catCounts.get(e.category) ?? 0) + 1);
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (s: Section) => (section === s && path === url(s === 'home' ? '' : `${s}/`) ? 'page' : undefined);
+// Detail pages highlight their parent section without claiming aria-current.
+const within = (s: Section) => (section === s && !current(s) ? '' : undefined);
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f5f0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1613" />
+    <link rel="icon" href={url('icon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('icon-192.png')} />
+    <link rel="manifest" href={url('manifest.webmanifest')} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <script is:inline>
+      (() => {
+        let pref = null;
+        try { pref = localStorage.getItem('dnd-ref:theme'); } catch {}
+        const root = document.documentElement;
+        const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (pref === 'light' || pref === 'dark') root.dataset.theme = pref;
+        root.dataset.resolvedTheme = pref === 'light' || pref === 'dark' ? pref : system;
+      })();
+    </script>
+  </head>
+  <body data-base={url()}>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="app-header">
+      <a class="brand" href={url()} aria-label={`${siteName} home`}>
+        <span class="brand-mark"><Icon name="d20" size={22} /></span>
+        <span class="brand-text">D&amp;D <span class="brand-sub">2024</span> Reference</span>
+      </a>
+      <div class="header-search">
+        <button class="search-trigger" type="button" data-open-search aria-haspopup="dialog">
+          <Icon name="search" size={18} />
+          <span>Search rules, weapons, masteries…</span>
+          <kbd data-shortcut-hint>Ctrl K</kbd>
+        </button>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn header-search-icon" type="button" data-open-search aria-haspopup="dialog" aria-label="Search">
+          <Icon name="search" />
+        </button>
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
+          <Icon name="sun" class="icon-sun" />
+          <Icon name="moon" class="icon-moon" />
+        </button>
+      </div>
+    </header>
+
+    <div class="shell">
+      <nav class="sidebar" aria-label="Sections">
+        <div class="nav-group">
+          <ul class="nav-list">
+            <li><a class="nav-link" href={url()} aria-current={current('home')}><Icon name="home" size={18} />Home</a></li>
+            <li><a class="nav-link" href={url('favourites/')} aria-current={current('favourites')}><Icon name="star" size={18} />Favourites</a></li>
+          </ul>
+        </div>
+        <div class="nav-group">
+          <p class="nav-heading">Rules Glossary</p>
+          <ul class="nav-list">
+            <li>
+              <a class="nav-link" href={url('glossary/')} aria-current={current('glossary')} data-nav-all>
+                <Icon name="book" size={18} />All rules<span class="nav-count">{glossary.length}</span>
+              </a>
+            </li>
+            {
+              CATEGORIES.filter((c) => catCounts.has(c.name)).map((c) => (
+                <li>
+                  <a class="nav-link" href={url(`glossary/?category=${c.slug}`)} data-nav-category={c.slug} data-active={category === c.name ? '' : undefined}>
+                    <Icon name={c.icon} size={18} />
+                    {c.name}
+                    <span class="nav-count">{catCounts.get(c.name)}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="nav-group">
+          <p class="nav-heading">Equipment</p>
+          <ul class="nav-list">
+            <li><a class="nav-link" href={url('weapons/')} aria-current={current('weapons')} data-active={within('weapons')}><Icon name="swords" size={18} />Weapons<span class="nav-count">{weapons.length}</span></a></li>
+            <li><a class="nav-link" href={url('masteries/')} aria-current={current('masteries')} data-active={within('masteries')}><Icon name="sparkles" size={18} />Weapon Masteries<span class="nav-count">{masteries.length}</span></a></li>
+            <li><a class="nav-link" href={url('properties/')} aria-current={current('properties')} data-active={within('properties')}><Icon name="tag" size={18} />Weapon Properties<span class="nav-count">{properties.length}</span></a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="main-inner">
+          <slot />
+          <footer class="app-footer">
+            <p>
+              This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at{' '}
+              <a href="https://www.dndbeyond.com/srd" rel="noopener">dndbeyond.com/srd</a>. The SRD 5.2.1 is licensed under the{' '}
+              <a href="https://creativecommons.org/licenses/by/4.0/legalcode" rel="noopener license">Creative Commons Attribution 4.0 International License</a>.
+            </p>
+            <p>Unofficial fan reference. Not affiliated with or endorsed by Wizards of the Coast.</p>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Primary">
+      <a href={url()} aria-current={section === 'home' ? 'page' : undefined}><Icon name="home" size={22} />Home</a>
+      <a href={url('glossary/')} aria-current={section === 'glossary' ? 'page' : undefined}><Icon name="book" size={22} />Rules</a>
+      <button type="button" data-open-search aria-haspopup="dialog"><Icon name="search" size={22} />Search</button>
+      <a href={url('weapons/')} aria-current={['weapons', 'masteries', 'properties'].includes(section) ? 'page' : undefined}><Icon name="swords" size={22} />Weapons</a>
+      <a href={url('favourites/')} aria-current={section === 'favourites' ? 'page' : undefined}><Icon name="star" size={22} />Saved</a>
+    </nav>
+
+    <SearchPalette />
+
+    <div class="term-tip" id="term-tip" popover="manual" role="tooltip"></div>
+
+    <script>
+      import { initShell } from '../scripts/shell';
+      initShell();
+    </script>
+  </body>
+</html>

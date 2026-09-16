@@ -1,0 +1,168 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+import Icon from '../components/Icon.astro';
+import { CATEGORIES, glossary, glossaryBySlug, glossaryUrl, masteries, masteryUrl, properties, url, weapons } from '../lib/data';
+
+const counts = new Map<string, number>();
+for (const e of glossary) counts.set(e.category, (counts.get(e.category) ?? 0) + 1);
+
+const quick = [
+  { title: 'Rules Glossary', text: `${glossary.length} rule definitions`, href: url('glossary/'), icon: 'book' },
+  { title: 'Weapons', text: `${weapons.length} weapons, sortable table`, href: url('weapons/'), icon: 'swords' },
+  { title: 'Weapon Masteries', text: `${masteries.length} mastery properties`, href: url('masteries/'), icon: 'sparkles' },
+  { title: 'Weapon Properties', text: `${properties.length} weapon properties`, href: url('properties/'), icon: 'tag' },
+];
+
+// Handy at-the-table lookups; only include entries that exist in the data.
+const combatStaples = ['attack-action', 'dash-action', 'disengage-action', 'dodge-action', 'help-action', 'hide-action', 'ready-action', 'opportunity-attack', 'grappled-condition', 'prone-condition']
+  .map((s) => glossaryBySlug.get(s))
+  .filter((e) => !!e);
+const conditions = glossary.filter((e) => e.tag === 'Condition');
+---
+
+<AppShell title="Home" section="home">
+  <section class="hero">
+    <p class="eyebrow"><Icon name="d20" size={16} />SRD 5.2.1 · 2024 Rules</p>
+    <h1>Find any rule in seconds.</h1>
+    <p>The Rules Glossary, weapons and weapon masteries in one fast reference. Works offline once it has loaded.</p>
+    <button class="search-trigger" type="button" data-open-search aria-haspopup="dialog">
+      <Icon name="search" size={20} />
+      <span>Search “grappled”, “longsword”, “topple”…</span>
+      <kbd data-shortcut-hint>Ctrl K</kbd>
+    </button>
+  </section>
+
+  <div class="card-grid">
+    {
+      quick.map((q) => (
+        <a class="card feature-card" href={q.href}>
+          <span class="feature-icon"><Icon name={q.icon} /></span>
+          <span>
+            <strong>{q.title}</strong>
+            <br />
+            <span class="card-summary">{q.text}</span>
+          </span>
+          <Icon name="chevronRight" class="chev" />
+        </a>
+      ))
+    }
+  </div>
+
+  <section class="section" data-home-saved hidden>
+    <div class="section-head">
+      <h2>Saved</h2>
+      <a href={url('favourites/')}>All favourites →</a>
+    </div>
+    <div class="chips" data-saved-list></div>
+  </section>
+
+  <section class="section" data-home-recent hidden>
+    <div class="section-head">
+      <h2>Recently viewed</h2>
+    </div>
+    <div class="chips" data-recent-list></div>
+  </section>
+
+  {
+    conditions.length > 0 && (
+      <section class="section">
+        <div class="section-head">
+          <h2>Conditions</h2>
+          <a href={url('glossary/?category=conditions')}>View all →</a>
+        </div>
+        <div class="chips">
+          {conditions.map((e) => (
+            <a class="chip" href={glossaryUrl(e.slug)} data-term={`glossary/${e.slug}`}>{e.title}</a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    combatStaples.length > 0 && (
+      <section class="section">
+        <div class="section-head">
+          <h2>In combat</h2>
+          <a href={url('glossary/?category=actions')}>All actions →</a>
+        </div>
+        <div class="chips">
+          {combatStaples.map((e) => (
+            <a class="chip" href={glossaryUrl(e!.slug)}>{e!.title}</a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Weapon Masteries</h2>
+      <a href={url('masteries/')}>Full rules →</a>
+    </div>
+    <div class="card-grid">
+      {
+        masteries.map((m) => (
+          <article class="card">
+            <h3 class="card-title"><a class="card-link" href={masteryUrl(m.slug)}>{m.name}</a></h3>
+            <p class="card-summary">{m.summary}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Browse by category</h2>
+    </div>
+    <div class="card-grid">
+      {
+        CATEGORIES.filter((c) => counts.has(c.name)).map((c) => (
+          <a class="card feature-card" href={url(`glossary/?category=${c.slug}`)}>
+            <span class="feature-icon"><Icon name={c.icon} /></span>
+            <span>
+              <strong>{c.name}</strong>
+              <br />
+              <span class="card-summary">{counts.get(c.name)} rules</span>
+            </span>
+            <Icon name="chevronRight" class="chev" />
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</AppShell>
+
+<style>
+  a.card { color: var(--text); text-decoration: none; }
+  a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+</style>
+
+<script>
+  import { getFavourites, getRecent, loadIndex } from '../scripts/store';
+  import { escapeHtml } from '../scripts/search';
+
+  const renderChips = (el: HTMLElement, ids: string[], byId: Map<string, { url: string; title: string }>) => {
+    el.innerHTML = ids
+      .map((id) => byId.get(id))
+      .filter((d) => !!d)
+      .map((d) => `<a class="chip" href="${d!.url}">${escapeHtml(d!.title)}</a>`)
+      .join('');
+    return el.children.length > 0;
+  };
+
+  const favs = getFavourites();
+  const recent = getRecent();
+  if (favs.length || recent.length) {
+    loadIndex()
+      .then((docs) => {
+        const byId = new Map(docs.map((d) => [d.id, d]));
+        const saved = document.querySelector<HTMLElement>('[data-home-saved]')!;
+        saved.hidden = !renderChips(saved.querySelector('[data-saved-list]')!, favs.slice(0, 12), byId);
+        const rec = document.querySelector<HTMLElement>('[data-home-recent]')!;
+        rec.hidden = !renderChips(rec.querySelector('[data-recent-list]')!, recent, byId);
+      })
+      .catch(() => {});
+  }
+</script>

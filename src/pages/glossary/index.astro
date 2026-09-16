@@ -1,0 +1,142 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import Icon from '../../components/Icon.astro';
+import { CATEGORIES, categoryMeta, glossary, glossaryUrl } from '../../lib/data';
+
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const groups = new Map<string, typeof glossary>();
+for (const entry of glossary) {
+  const letter = entry.title[0].toUpperCase();
+  groups.set(letter, [...(groups.get(letter) ?? []), entry]);
+}
+const counts = new Map<string, number>();
+for (const e of glossary) counts.set(e.category, (counts.get(e.category) ?? 0) + 1);
+const cats = CATEGORIES.filter((c) => counts.has(c.name));
+---
+
+<AppShell title="Rules Glossary" section="glossary" description="Every entry in the D&D 2024 Rules Glossary (SRD 5.2.1), searchable and filterable by category.">
+  <header class="page-head">
+    <p class="eyebrow"><Icon name="book" size={16} />SRD 5.2.1</p>
+    <h1>Rules Glossary</h1>
+    <p class="lede">Definitions for actions, conditions, combat and core rules. Filter by category or type to narrow the list.</p>
+  </header>
+
+  <div class="toolbar" data-glossary-filters>
+    <div class="toolbar-row">
+      <label class="field">
+        <span class="visually-hidden">Filter glossary</span>
+        <Icon name="search" size={18} />
+        <input class="input" type="search" name="q" placeholder="Filter rules…" autocomplete="off" data-filter-input />
+      </label>
+      <span class="result-count" aria-live="polite" data-result-count>{glossary.length} rules</span>
+    </div>
+    <div class="chips-scroll" role="group" aria-label="Category">
+      <button class="chip" type="button" data-category="" aria-pressed="true">All <span class="count">{glossary.length}</span></button>
+      {
+        cats.map((c) => (
+          <button class="chip" type="button" data-category={c.slug} aria-pressed="false">
+            <Icon name={c.icon} size={15} />
+            {c.name} <span class="count">{counts.get(c.name)}</span>
+          </button>
+        ))
+      }
+    </div>
+    <nav class="az-bar" aria-label="Jump to letter">
+      {letters.map((l) => <a href={`#letter-${l}`} data-letter={l} aria-disabled={groups.has(l) ? undefined : 'true'}>{l}</a>)}
+    </nav>
+  </div>
+
+  <div data-glossary-list>
+    {
+      [...groups].map(([letter, entries]) => (
+        <section class="letter-group" id={`letter-${letter}`} aria-labelledby={`h-${letter}`} data-group={letter}>
+          <h2 class="letter-heading" id={`h-${letter}`}>{letter}</h2>
+          <div class="card-grid">
+            {entries.map((e) => (
+              <EntryCard
+                id={`glossary/${e.slug}`}
+                title={e.title}
+                href={glossaryUrl(e.slug)}
+                summary={e.summary}
+                badges={[...(e.tag ? [{ text: e.tag, tone: 'crimson' as const }] : []), { text: e.category }]}
+                attrs={{
+                  'data-entry': '',
+                  'data-category': categoryMeta(e.category).slug,
+                  'data-search': `${e.title} ${e.tag ?? ''} ${e.summary}`.toLowerCase(),
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="empty-state" hidden data-empty>
+    <Icon name="search" size={28} />
+    <p><strong>No rules match.</strong></p>
+    <p>Try a different word, or <button class="btn" type="button" data-open-search>search everything</button></p>
+  </div>
+</AppShell>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-glossary-filters]')!;
+  const input = root.querySelector<HTMLInputElement>('[data-filter-input]')!;
+  const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-category]')];
+  const count = root.querySelector<HTMLElement>('[data-result-count]')!;
+  const entries = [...document.querySelectorAll<HTMLElement>('[data-entry]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+
+  const params = new URLSearchParams(location.search);
+  let category = params.get('category') ?? '';
+  input.value = params.get('q') ?? '';
+
+  function apply() {
+    const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const el of entries) {
+      const match =
+        (!category || el.dataset.category === category) && terms.every((t) => el.dataset.search!.includes(t));
+      el.hidden = !match;
+      if (match) shown++;
+    }
+    const visibleLetters = new Set<string>();
+    for (const g of groups) {
+      g.hidden = !g.querySelector('[data-entry]:not([hidden])');
+      if (!g.hidden) visibleLetters.add(g.dataset.group!);
+    }
+    root.querySelectorAll<HTMLAnchorElement>('[data-letter]').forEach((a) => {
+      if (visibleLetters.has(a.dataset.letter!)) a.removeAttribute('aria-disabled');
+      else a.setAttribute('aria-disabled', 'true');
+    });
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.category === category)));
+    count.textContent = `${shown} rule${shown === 1 ? '' : 's'}`;
+    empty.hidden = shown > 0;
+
+    // Sidebar highlight for the active category.
+    document.querySelectorAll<HTMLElement>('[data-nav-category]').forEach((a) => {
+      a.toggleAttribute('data-active', a.dataset.navCategory === category);
+    });
+    const all = document.querySelector<HTMLElement>('[data-nav-all]');
+    if (category) all?.removeAttribute('aria-current');
+    else all?.setAttribute('aria-current', 'page');
+
+    const next = new URLSearchParams();
+    if (category) next.set('category', category);
+    if (input.value.trim()) next.set('q', input.value.trim());
+    const qs = next.toString();
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      category = chip.dataset.category ?? '';
+      apply();
+    }),
+  );
+  input.addEventListener('input', apply);
+  apply();
+  chips.find((c) => c.dataset.category === category)?.scrollIntoView({ block: 'nearest', inline: 'center' });
+</script>

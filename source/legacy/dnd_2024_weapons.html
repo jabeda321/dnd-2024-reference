@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>D&D 2024 Weapons & Properties</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #1a1614;
+            --bg-gradient-start: #0d0b0a;
+            --bg-gradient-end: #1a1614;
+            --bg-card: #242220;
+            --bg-card-hover: #2d2a27;
+            --bg-card-item: #1e1c1a;
+            --bg-header: #8b2e2e;
+            --bg-header-end: #6b1e1e;
+            --border-main: #4a3f35;
+            --border-hover: #8b7355;
+            --text-primary: #e8dfd0;
+            --text-secondary: #b8a890;
+            --text-title: #f5ead8;
+            --text-accent: #d4a574;
+            --text-link: #c9965f;
+            --shadow: rgba(0,0,0,0.6);
+            --accent-red: #c53030;
+            --accent-gold: #d4af37;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f5f0e8;
+            --bg-gradient-start: #f5f0e8;
+            --bg-gradient-end: #e8dfd0;
+            --bg-card: #fff;
+            --bg-card-hover: #f0ebe0;
+            --bg-card-item: #fafaf8;
+            --bg-header: #8b2e2e;
+            --bg-header-end: #6b1e1e;
+            --border-main: #bfa88e;
+            --border-hover: #8b7355;
+            --text-primary: #2c2416;
+            --text-secondary: #5a4a3a;
+            --text-title: #1a0f0f;
+            --text-accent: #8b7355;
+            --text-link: #6b5545;
+            --shadow: rgba(0,0,0,0.1);
+            --accent-red: #c53030;
+            --accent-gold: #d4af37;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .page-background {
+            background: linear-gradient(to bottom, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .page-background::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 46, 46, 0.03) 2px, rgba(139, 46, 46, 0.03) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-main);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px var(--shadow);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 1.1em;
+            border: 2px solid var(--border-main);
+            border-radius: 6px;
+            font-family: 'Crimson Pro', serif;
+            background: var(--bg-card-item);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.2);
+            background: var(--bg-card);
+        }
+
+        .theme-toggle {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--bg-header) 0%, var(--bg-header-end) 100%);
+            border: 2px solid var(--accent-red);
+            border-radius: 6px;
+            color: var(--text-title);
+            font-family: 'Crimson Pro', serif;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(197, 48, 48, 0.4);
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+        }
+
+        .section-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-main);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .section-container:hover {
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, var(--bg-header) 0%, var(--bg-header-end) 100%);
+            border-bottom: 3px solid var(--accent-red);
+            padding: 16px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--text-title);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        .float-right {
+            float: right;
+            font-size: 0.8em;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .section-content {
+            padding: 18px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section-subtitle {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-main);
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background: var(--bg-card-item);
+            border-left: 4px solid var(--accent-red);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .item:hover {
+            background: var(--bg-card-hover);
+            border-left-color: var(--accent-gold);
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(139, 46, 46, 0.3);
+        }
+
+        .item-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            margin-right: 14px;
+            background: linear-gradient(135deg, #8b2e2e 0%, #6b1e1e 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--accent-gold);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 700;
+            color: var(--text-title);
+            font-size: 1.1em;
+            margin-bottom: 2px;
+        }
+
+        .item-desc {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-dialog {
+            background: var(--bg-card);
+            border: 3px solid var(--accent-red);
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--bg-header) 0%, var(--bg-header-end) 100%);
+            border-bottom: 3px solid var(--accent-gold);
+            padding: 20px 25px;
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-title);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .modal-body {
+            padding: 30px;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .weapon-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--bg-card-item);
+            border-radius: 6px;
+            border: 2px solid var(--border-main);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--text-title);
+            font-size: 1.15em;
+        }
+
+        .property-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid var(--border-main);
+        }
+
+        .property-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1.15em;
+        }
+
+        .property-desc {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .property-link {
+            color: var(--text-link);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .property-link:hover {
+            color: var(--accent-gold);
+        }
+
+        .weapon-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .weapon-link {
+            padding: 8px 16px;
+            background: var(--bg-card-item);
+            border: 2px solid var(--border-main);
+            border-radius: 6px;
+            color: var(--text-link);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .weapon-link:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-red);
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(139, 46, 46, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .theme-toggle {
+                width: 100%;
+            }
+            
+            .weapon-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="page-background">
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search weapons, properties, masteries...">
+            <button id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+        </div>
+        
+        <div class="page" id="sections"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle"></div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+const weaponsData = {
+  "weapons": [
+    {
+      "name": "Club",
+      "damage": "1d4 Bludgeoning",
+      "properties": "Light",
+      "mastery": "Slow",
+      "weight": "2 lb.",
+      "cost": "1 SP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Dagger",
+      "damage": "1d4 Piercing",
+      "properties": "Finesse, Light, Thrown (Range 20/60)",
+      "mastery": "Nick",
+      "weight": "1 lb.",
+      "cost": "2 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Greatclub",
+      "damage": "1d8 Bludgeoning",
+      "properties": "Two-Handed",
+      "mastery": "Push",
+      "weight": "10 lb.",
+      "cost": "2 SP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Handaxe",
+      "damage": "1d6 Slashing",
+      "properties": "Light, Thrown (Range 20/60)",
+      "mastery": "Vex",
+      "weight": "2 lb.",
+      "cost": "5 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Javelin",
+      "damage": "1d6 Piercing",
+      "properties": "Thrown (Range 30/120)",
+      "mastery": "Slow",
+      "weight": "2 lb.",
+      "cost": "5 SP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Light Hammer",
+      "damage": "1d4 Bludgeoning",
+      "properties": "Light, Thrown (Range 20/60)",
+      "mastery": "Nick",
+      "weight": "2 lb.",
+      "cost": "2 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Mace",
+      "damage": "1d6 Bludgeoning",
+      "properties": "\u2014",
+      "mastery": "Sap",
+      "weight": "4 lb.",
+      "cost": "5 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Quarterstaff",
+      "damage": "1d6 Bludgeoning",
+      "properties": "Versatile (1d8)",
+      "mastery": "Topple",
+      "weight": "4 lb.",
+      "cost": "2 SP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Sickle",
+      "damage": "1d4 Slashing",
+      "properties": "Light",
+      "mastery": "Nick",
+      "weight": "2 lb.",
+      "cost": "1 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Spear",
+      "damage": "1d6 Piercing",
+      "properties": "Thrown (Range 20/60), Versatile (1d8)",
+      "mastery": "Sap",
+      "weight": "3 lb.",
+      "cost": "1 GP",
+      "category": "simple_melee"
+    },
+    {
+      "name": "Dart",
+      "damage": "1d4 Piercing",
+      "properties": "Finesse, Thrown (Range 20/60)",
+      "mastery": "Vex",
+      "weight": "1/4 lb.",
+      "cost": "5 CP",
+      "category": "simple_ranged"
+    },
+    {
+      "name": "Light Crossbow",
+      "damage": "1d8 Piercing",
+      "properties": "Ammunition (Range 80/320; Bolt), Loading, Two-Handed",
+      "mastery": "Slow",
+      "weight": "5 lb.",
+      "cost": "25 GP",
+      "category": "simple_ranged"
+    },
+    {
+      "name": "Shortbow",
+      "damage": "1d6 Piercing",
+      "properties": "Ammunition (Range 80/320; Arrow), Two-Handed",
+      "mastery": "Vex",
+      "weight": "2 lb.",
+      "cost": "25 GP",
+      "category": "simple_ranged"
+    },
+    {
+      "name": "Sling",
+      "damage": "1d4 Bludgeoning",
+      "properties": "Ammunition (Range 30/120; Bullet)",
+      "mastery": "Slow",
+      "weight": "\u2014",
+      "cost": "1 SP",
+      "category": "simple_ranged"
+    },
+    {
+      "name": "Battleaxe",
+      "damage": "1d8 Slashing",
+      "properties": "Versatile (1d10)",
+      "mastery": "Topple",
+      "weight": "4 lb.",
+      "cost": "10 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Flail",
+      "damage": "1d8 Bludgeoning",
+      "properties": "\u2014",
+      "mastery": "Sap",
+      "weight": "2 lb.",
+      "cost": "10 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Glaive",
+      "damage": "1d10 Slashing",
+      "properties": "Heavy, Reach, Two-Handed",
+      "mastery": "Graze",
+      "weight": "6 lb.",
+      "cost": "20 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Greataxe",
+      "damage": "1d12 Slashing",
+      "properties": "Heavy, Two-Handed",
+      "mastery": "Cleave",
+      "weight": "7 lb.",
+      "cost": "30 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Greatsword",
+      "damage": "2d6 Slashing",
+      "properties": "Heavy, Two-Handed",
+      "mastery": "Graze",
+      "weight": "6 lb.",
+      "cost": "50 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Halberd",
+      "damage": "1d10 Slashing",
+      "properties": "Heavy, Reach, Two-Handed",
+      "mastery": "Cleave",
+      "weight": "6 lb.",
+      "cost": "20 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Lance",
+      "damage": "1d10 Piercing",
+      "properties": "Heavy, Reach, Two-Handed (unless mounted)",
+      "mastery": "Topple",
+      "weight": "6 lb.",
+      "cost": "10 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Longsword",
+      "damage": "1d8 Slashing",
+      "properties": "Versatile (1d10)",
+      "mastery": "Sap",
+      "weight": "3 lb.",
+      "cost": "15 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Maul",
+      "damage": "2d6 Bludgeoning",
+      "properties": "Heavy, Two-Handed",
+      "mastery": "Topple",
+      "weight": "10 lb.",
+      "cost": "10 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Morningstar",
+      "damage": "1d8 Piercing",
+      "properties": "\u2014",
+      "mastery": "Sap",
+      "weight": "4 lb.",
+      "cost": "15 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Pike",
+      "damage": "1d10 Piercing",
+      "properties": "Heavy, Reach, Two-Handed",
+      "mastery": "Push",
+      "weight": "18 lb.",
+      "cost": "5 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Rapier",
+      "damage": "1d8 Piercing",
+      "properties": "Finesse",
+      "mastery": "Vex",
+      "weight": "2 lb.",
+      "cost": "25 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Scimitar",
+      "damage": "1d6 Slashing",
+      "properties": "Finesse, Light",
+      "mastery": "Nick",
+      "weight": "3 lb.",
+      "cost": "25 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Shortsword",
+      "damage": "1d6 Piercing",
+      "properties": "Finesse, Light",
+      "mastery": "Vex",
+      "weight": "2 lb.",
+      "cost": "10 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Trident",
+      "damage": "1d8 Piercing",
+      "properties": "Thrown (Range 20/60), Versatile (1d10)",
+      "mastery": "Topple",
+      "weight": "4 lb.",
+      "cost": "5 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Warhammer",
+      "damage": "1d8 Bludgeoning",
+      "properties": "Versatile (1d10)",
+      "mastery": "Push",
+      "weight": "5 lb.",
+      "cost": "15 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "War Pick",
+      "damage": "1d8 Piercing",
+      "properties": "Versatile (1d10)",
+      "mastery": "Sap",
+      "weight": "2 lb.",
+      "cost": "5 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Whip",
+      "damage": "1d4 Slashing",
+      "properties": "Finesse, Reach",
+      "mastery": "Slow",
+      "weight": "3 lb.",
+      "cost": "2 GP",
+      "category": "martial_melee"
+    },
+    {
+      "name": "Blowgun",
+      "damage": "1 Piercing",
+      "properties": "Ammunition (Range 25/100; Needle), Loading",
+      "mastery": "Vex",
+      "weight": "1 lb.",
+      "cost": "10 GP",
+      "category": "martial_ranged"
+    },
+    {
+      "name": "Hand Crossbow",
+      "damage": "1d6 Piercing",
+      "properties": "Ammunition (Range 30/120; Bolt), Light, Loading",
+      "mastery": "Vex",
+      "weight": "3 lb.",
+      "cost": "75 GP",
+      "category": "martial_ranged"
+    },
+    {
+      "name": "Heavy Crossbow",
+      "damage": "1d10 Piercing",
+      "properties": "Ammunition (Range 100/400; Bolt), Heavy, Loading, Two-Handed",
+      "mastery": "Push",
+      "weight": "18 lb.",
+      "cost": "50 GP",
+      "category": "martial_ranged"
+    },
+    {
+      "name": "Longbow",
+      "damage": "1d8 Piercing",
+      "properties": "Ammunition (Range 150/600; Arrow), Heavy, Two-Handed",
+      "mastery": "Slow",
+      "weight": "2 lb.",
+      "cost": "50 GP",
+      "category": "martial_ranged"
+    },
+    {
+      "name": "Musket",
+      "damage": "1d12 Piercing",
+      "properties": "Ammunition (Range 40/120; Bullet), Loading, Two-Handed",
+      "mastery": "Slow",
+      "weight": "10 lb.",
+      "cost": "500 GP",
+      "category": "martial_ranged"
+    },
+    {
+      "name": "Pistol",
+      "damage": "1d10 Piercing",
+      "properties": "Ammunition (Range 30/90; Bullet), Loading",
+      "mastery": "Vex",
+      "weight": "3 lb.",
+      "cost": "250 GP",
+      "category": "martial_ranged"
+    }
+  ],
+  "properties": {
+    "Ammunition": "You can use a weapon that has the Ammunition property to make a ranged attack only if you have ammunition to fire from it. The type of ammunition required is specified with the weapon's range. Each attack expends one piece of ammunition. Drawing the ammunition is part of the attack (you need a free hand to load a one-handed weapon). After a fight, you can spend 1 minute to recover half the ammunition (round down) you used in the fight; the rest is lost.",
+    "Finesse": "When making an attack with a Finesse weapon, use your choice of your Strength or Dexterity modifier for the attack and damage rolls. You must use the same modifier for both rolls.",
+    "Heavy": "You have Disadvantage on attack rolls with a Heavy weapon if it's a Melee weapon and your Strength score isn't at least 13 or if it's a Ranged weapon and your Dexterity score isn't at least 13.",
+    "Light": "When you take the Attack action on your turn and attack with a Light weapon, you can make one extra attack as a Bonus Action later on the same turn. That extra attack must be made with a different Light weapon, and you don't add your ability modifier to the extra attack's damage unless that modifier is negative.",
+    "Loading": "You can fire only one piece of ammunition from a Loading weapon when you use an action, a Bonus Action, or a Reaction to fire it, regardless of the number of attacks you can normally make.",
+    "Range": "A Range weapon has a range in parentheses after the Ammunition or Thrown property. The range lists two numbers. The first is the weapon's normal range in feet, and the second is the weapon's long range. When attacking a target beyond normal range, you have Disadvantage on the attack roll. You can't attack a target beyond the long range.",
+    "Reach": "A Reach weapon adds 5 feet to your reach when you attack with it, as well as when determining your reach for Opportunity Attacks with it.",
+    "Thrown": "If a weapon has the Thrown property, you can throw the weapon to make a ranged attack, and you can draw that weapon as part of the attack. If the weapon is a Melee weapon, use the same ability modifier for the attack and damage rolls that you use for a melee attack with that weapon.",
+    "Two-Handed": "A Two-Handed weapon requires two hands when you attack with it.",
+    "Versatile": "A Versatile weapon can be used with one or two hands. A damage value in parentheses appears with the property. The weapon deals that damage when used with two hands to make a melee attack."
+  },
+  "mastery": {
+    "Cleave": "If you hit a creature with a melee attack roll using this weapon, you can make a melee attack roll with the weapon against a second creature within 5 feet of the first that is also within your reach. On a hit, the second creature takes the weapon's damage, but don't add your ability modifier to that damage unless that modifier is negative. You can make this extra attack only once per turn.",
+    "Graze": "If your attack roll with this weapon misses a creature, you can deal damage to that creature equal to the ability modifier you used to make the attack roll. This damage is the same type dealt by the weapon, and the damage can be increased only by increasing the ability modifier.",
+    "Nick": "When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.",
+    "Push": "If you hit a creature with this weapon, you can push the creature up to 10 feet straight away from yourself if it is Large or smaller.",
+    "Sap": "If you hit a creature with this weapon, that creature has Disadvantage on its next attack roll before the start of your next turn.",
+    "Slow": "If you hit a creature with this weapon and deal damage to it, you can reduce its Speed by 10 feet until the start of your next turn. If the creature is hit more than once by weapons that have this property, the Speed reduction doesn't exceed 10 feet.",
+    "Topple": "If you hit a creature with this weapon, you can force the creature to make a Constitution saving throw (DC 8 plus the ability modifier used to make the attack roll and your Proficiency Bonus). On a failed save, the creature has the Prone condition.",
+    "Vex": "If you hit a creature with this weapon and deal damage to the creature, you have Advantage on your next attack roll against that creature before the end of your next turn."
+  },
+  "mastery_entries": [
+    {
+      "name": "Cleave",
+      "description": "If you hit a creature with a melee attack roll using this weapon, you can make a melee attack roll with the weapon against a second creature within 5 feet of the first that is also within your reach. On a hit, the second creature takes the weapon's damage, but don't add your ability modifier to that damage unless that modifier is negative. You can make this extra attack only once per turn.",
+      "type": "mastery",
+      "weapons": [
+        "Greataxe",
+        "Halberd"
+      ]
+    },
+    {
+      "name": "Graze",
+      "description": "If your attack roll with this weapon misses a creature, you can deal damage to that creature equal to the ability modifier you used to make the attack roll. This damage is the same type dealt by the weapon, and the damage can be increased only by increasing the ability modifier.",
+      "type": "mastery",
+      "weapons": [
+        "Glaive",
+        "Greatsword"
+      ]
+    },
+    {
+      "name": "Nick",
+      "description": "When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.",
+      "type": "mastery",
+      "weapons": [
+        "Dagger",
+        "Light Hammer",
+        "Sickle",
+        "Scimitar"
+      ]
+    },
+    {
+      "name": "Push",
+      "description": "If you hit a creature with this weapon, you can push the creature up to 10 feet straight away from yourself if it is Large or smaller.",
+      "type": "mastery",
+      "weapons": [
+        "Greatclub",
+        "Pike",
+        "Warhammer",
+        "Heavy Crossbow"
+      ]
+    },
+    {
+      "name": "Sap",
+      "description": "If you hit a creature with this weapon, that creature has Disadvantage on its next attack roll before the start of your next turn.",
+      "type": "mastery",
+      "weapons": [
+        "Mace",
+        "Spear",
+        "Flail",
+        "Longsword",
+        "Morningstar",
+        "War Pick"
+      ]
+    },
+    {
+      "name": "Slow",
+      "description": "If you hit a creature with this weapon and deal damage to it, you can reduce its Speed by 10 feet until the start of your next turn. If the creature is hit more than once by weapons that have this property, the Speed reduction doesn't exceed 10 feet.",
+      "type": "mastery",
+      "weapons": [
+        "Club",
+        "Javelin",
+        "Light Crossbow",
+        "Sling",
+        "Whip",
+        "Longbow",
+        "Musket"
+      ]
+    },
+    {
+      "name": "Topple",
+      "description": "If you hit a creature with this weapon, you can force the creature to make a Constitution saving throw (DC 8 plus the ability modifier used to make the attack roll and your Proficiency Bonus). On a failed save, the creature has the Prone condition.",
+      "type": "mastery",
+      "weapons": [
+        "Quarterstaff",
+        "Battleaxe",
+        "Lance",
+        "Maul",
+        "Trident"
+      ]
+    },
+    {
+      "name": "Vex",
+      "description": "If you hit a creature with this weapon and deal damage to the creature, you have Advantage on your next attack roll against that creature before the end of your next turn.",
+      "type": "mastery",
+      "weapons": [
+        "Handaxe",
+        "Dart",
+        "Shortbow",
+        "Rapier",
+        "Shortsword",
+        "Blowgun",
+        "Hand Crossbow",
+        "Pistol"
+      ]
+    }
+  ],
+  "property_entries": [
+    {
+      "name": "Ammunition",
+      "description": "You can use a weapon that has the Ammunition property to make a ranged attack only if you have ammunition to fire from it. The type of ammunition required is specified with the weapon's range. Each attack expends one piece of ammunition. Drawing the ammunition is part of the attack (you need a free hand to load a one-handed weapon). After a fight, you can spend 1 minute to recover half the ammunition (round down) you used in the fight; the rest is lost.",
+      "type": "property",
+      "weapons": [
+        "Light Crossbow",
+        "Shortbow",
+        "Sling",
+        "Blowgun",
+        "Hand Crossbow",
+        "Heavy Crossbow",
+        "Longbow",
+        "Musket",
+        "Pistol"
+      ]
+    },
+    {
+      "name": "Finesse",
+      "description": "When making an attack with a Finesse weapon, use your choice of your Strength or Dexterity modifier for the attack and damage rolls. You must use the same modifier for both rolls.",
+      "type": "property",
+      "weapons": [
+        "Dagger",
+        "Dart",
+        "Rapier",
+        "Scimitar",
+        "Shortsword",
+        "Whip"
+      ]
+    },
+    {
+      "name": "Heavy",
+      "description": "You have Disadvantage on attack rolls with a Heavy weapon if it's a Melee weapon and your Strength score isn't at least 13 or if it's a Ranged weapon and your Dexterity score isn't at least 13.",
+      "type": "property",
+      "weapons": [
+        "Glaive",
+        "Greataxe",
+        "Greatsword",
+        "Halberd",
+        "Lance",
+        "Maul",
+        "Pike",
+        "Heavy Crossbow",
+        "Longbow"
+      ]
+    },
+    {
+      "name": "Light",
+      "description": "When you take the Attack action on your turn and attack with a Light weapon, you can make one extra attack as a Bonus Action later on the same turn. That extra attack must be made with a different Light weapon, and you don't add your ability modifier to the extra attack's damage unless that modifier is negative.",
+      "type": "property",
+      "weapons": [
+        "Club",
+        "Dagger",
+        "Handaxe",
+        "Light Hammer",
+        "Sickle",
+        "Scimitar",
+        "Shortsword",
+        "Hand Crossbow"
+      ]
+    },
+    {
+      "name": "Loading",
+      "description": "You can fire only one piece of ammunition from a Loading weapon when you use an action, a Bonus Action, or a Reaction to fire it, regardless of the number of attacks you can normally make.",
+      "type": "property",
+      "weapons": [
+        "Light Crossbow",
+        "Blowgun",
+        "Hand Crossbow",
+        "Heavy Crossbow",
+        "Musket",
+        "Pistol"
+      ]
+    },
+    {
+      "name": "Range",
+      "description": "A Range weapon has a range in parentheses after the Ammunition or Thrown property. The range lists two numbers. The first is the weapon's normal range in feet, and the second is the weapon's long range. When attacking a target beyond normal range, you have Disadvantage on the attack roll. You can't attack a target beyond the long range.",
+      "type": "property",
+      "weapons": [
+        "Dagger",
+        "Handaxe",
+        "Javelin",
+        "Light Hammer",
+        "Spear",
+        "Dart",
+        "Light Crossbow",
+        "Shortbow",
+        "Sling",
+        "Trident",
+        "Blowgun",
+        "Hand Crossbow",
+        "Heavy Crossbow",
+        "Longbow",
+        "Musket",
+        "Pistol"
+      ]
+    },
+    {
+      "name": "Reach",
+      "description": "A Reach weapon adds 5 feet to your reach when you attack with it, as well as when determining your reach for Opportunity Attacks with it.",
+      "type": "property",
+      "weapons": [
+        "Glaive",
+        "Halberd",
+        "Lance",
+        "Pike",
+        "Whip"
+      ]
+    },
+    {
+      "name": "Thrown",
+      "description": "If a weapon has the Thrown property, you can throw the weapon to make a ranged attack, and you can draw that weapon as part of the attack. If the weapon is a Melee weapon, use the same ability modifier for the attack and damage rolls that you use for a melee attack with that weapon.",
+      "type": "property",
+      "weapons": [
+        "Dagger",
+        "Handaxe",
+        "Javelin",
+        "Light Hammer",
+        "Spear",
+        "Dart",
+        "Trident"
+      ]
+    },
+    {
+      "name": "Two-Handed",
+      "description": "A Two-Handed weapon requires two hands when you attack with it.",
+      "type": "property",
+      "weapons": [
+        "Greatclub",
+        "Light Crossbow",
+        "Shortbow",
+        "Glaive",
+        "Greataxe",
+        "Greatsword",
+        "Halberd",
+        "Lance",
+        "Maul",
+        "Pike",
+        "Heavy Crossbow",
+        "Longbow",
+        "Musket"
+      ]
+    },
+    {
+      "name": "Versatile",
+      "description": "A Versatile weapon can be used with one or two hands. A damage value in parentheses appears with the property. The weapon deals that damage when used with two hands to make a melee attack.",
+      "type": "property",
+      "weapons": [
+        "Quarterstaff",
+        "Spear",
+        "Battleaxe",
+        "Longsword",
+        "Trident",
+        "Warhammer",
+        "War Pick"
+      ]
+    }
+  ]
+};
+;
+
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+updateThemeButton(savedTheme);
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeButton(newTheme);
+});
+
+function updateThemeButton(theme) {
+    themeToggle.textContent = theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+}
+
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const sectionsContainer = document.getElementById('sections');
+const searchBox = document.getElementById('searchBox');
+
+// Create lookup maps
+const weaponMap = {};
+weaponsData.weapons.forEach(w => {
+    weaponMap[w.name.toLowerCase()] = w;
+});
+
+// Icon mapping for weapons
+function getWeaponIcon(weapon) {
+    const name = weapon.name.toLowerCase();
+    
+    if (name.includes('sword')) return '⚔';
+    if (name.includes('axe')) return '⚏';
+    if (name.includes('bow')) return '⇢';
+    if (name.includes('crossbow')) return '◈';
+    if (name.includes('dagger')) return '◇';
+    if (name.includes('hammer') || name.includes('mace') || name.includes('club') || name.includes('maul')) return '▣';
+    if (name.includes('spear') || name.includes('javelin') || name.includes('trident') || name.includes('pike')) return '⚑';
+    if (name.includes('staff')) return '┃';
+    if (name.includes('whip')) return '≋';
+    if (name.includes('sling') || name.includes('dart')) return '◎';
+    if (name.includes('gun') || name.includes('pistol') || name.includes('musket')) return '◉';
+    if (name.includes('flail')) return '⊛';
+    
+    if (weapon.category && weapon.category.includes('ranged')) return '⇢';
+    return '⚔';
+}
+
+function getMasteryIcon(mastery) {
+    const icons = {
+        'Cleave': '⚔',
+        'Graze': '◈',
+        'Nick': '◇',
+        'Push': '◎',
+        'Sap': '▼',
+        'Slow': '◐',
+        'Topple': '▬',
+        'Vex': '✦'
+    };
+    return icons[mastery] || '◆';
+}
+
+function getPropertyIcon(property) {
+    const icons = {
+        'Ammunition': '⇢',
+        'Finesse': '◇',
+        'Heavy': '▣',
+        'Light': '◌',
+        'Loading': '◎',
+        'Range': '⇢',
+        'Reach': '⚑',
+        'Thrown': '◈',
+        'Two-Handed': '▬',
+        'Versatile': '◆'
+    };
+    return icons[property] || '◆';
+}
+
+function getCategoryName(category) {
+    const names = {
+        'simple_melee': 'Simple Melee',
+        'simple_ranged': 'Simple Ranged',
+        'martial_melee': 'Martial Melee',
+        'martial_ranged': 'Martial Ranged'
+    };
+    return names[category] || category;
+}
+
+function parseProperties(propertiesStr) {
+    if (propertiesStr === '—') return [];
+    
+    const props = [];
+    const parts = propertiesStr.split(',').map(p => p.trim());
+    
+    parts.forEach(part => {
+        if (part.includes('Ammunition')) props.push('Ammunition');
+        else if (part.includes('Finesse')) props.push('Finesse');
+        else if (part.includes('Heavy')) props.push('Heavy');
+        else if (part.includes('Light')) props.push('Light');
+        else if (part.includes('Loading')) props.push('Loading');
+        else if (part.includes('Reach')) props.push('Reach');
+        else if (part.includes('Thrown')) props.push('Thrown');
+        else if (part.includes('Two-Handed')) props.push('Two-Handed');
+        else if (part.includes('Versatile')) props.push('Versatile');
+    });
+    
+    return props;
+}
+
+function openWeapon(weapon) {
+    modalTitle.textContent = weapon.name;
+    
+    const properties = parseProperties(weapon.properties);
+    
+    let bodyHTML = `
+        <div class="weapon-stats">
+            <div class="stat-item">
+                <div class="stat-label">Damage</div>
+                <div class="stat-value">${weapon.damage}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Mastery</div>
+                <div class="stat-value"><span class="property-link" data-mastery="${weapon.mastery}">${weapon.mastery}</span></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Weight</div>
+                <div class="stat-value">${weapon.weight}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Cost</div>
+                <div class="stat-value">${weapon.cost}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Category</div>
+                <div class="stat-value">${getCategoryName(weapon.category)}</div>
+            </div>
+        </div>
+    `;
+    
+    if (properties.length > 0 || weapon.properties !== '—') {
+        bodyHTML += '<div class="property-section">';
+        bodyHTML += '<div class="property-title">Properties</div>';
+        
+        // Show properties as clickable badges
+        if (properties.length > 0) {
+            bodyHTML += '<div class="weapon-links">';
+            properties.forEach(prop => {
+                bodyHTML += `<span class="weapon-link" data-property="${prop}">${prop}</span>`;
+            });
+            bodyHTML += '</div>';
+            bodyHTML += '<div class="property-desc" style="margin-top: 10px;">' + weapon.properties + '</div>';
+        } else {
+            bodyHTML += '<div class="property-desc">' + weapon.properties + '</div>';
+        }
+        
+        bodyHTML += '</div>';
+    }
+    
+    if (weaponsData.mastery[weapon.mastery]) {
+        bodyHTML += '<div class="property-section">';
+        bodyHTML += '<div class="property-title">Mastery Property</div>';
+        bodyHTML += `
+            <div class="property-desc">
+                <strong>${weapon.mastery}:</strong> ${weaponsData.mastery[weapon.mastery]}
+            </div>
+        `;
+        bodyHTML += '</div>';
+    }
+    
+    modalBody.innerHTML = bodyHTML;
+    
+    // Add click handlers for property badges
+    modalBody.querySelectorAll('.weapon-link[data-property]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const prop = link.dataset.property;
+            openProperty(prop);
+        });
+    });
+    
+    // Add click handlers for mastery link
+    modalBody.querySelectorAll('.property-link[data-mastery]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const mastery = link.dataset.mastery;
+            openMastery(mastery);
+        });
+    });
+    
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function openProperty(propertyName) {
+    modalTitle.textContent = propertyName;
+    
+    const propertyEntry = weaponsData.property_entries.find(p => p.name === propertyName);
+    
+    let bodyHTML = '<div class="property-section">';
+    bodyHTML += `<div class="property-desc"><strong>${propertyName}:</strong> ${weaponsData.properties[propertyName]}</div>`;
+    
+    if (propertyEntry && propertyEntry.weapons.length > 0) {
+        bodyHTML += '<div class="property-title" style="margin-top: 20px;">Weapons with this Property:</div>';
+        bodyHTML += '<div class="weapon-links">';
+        propertyEntry.weapons.forEach(weaponName => {
+            bodyHTML += `<span class="weapon-link" data-weapon="${weaponName}">${weaponName}</span>`;
+        });
+        bodyHTML += '</div>';
+    }
+    
+    bodyHTML += '</div>';
+    
+    modalBody.innerHTML = bodyHTML;
+    
+    modalBody.querySelectorAll('.weapon-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const weaponName = link.dataset.weapon;
+            const weapon = weaponMap[weaponName.toLowerCase()];
+            if (weapon) {
+                openWeapon(weapon);
+            }
+        });
+    });
+    
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function openMastery(masteryName) {
+    modalTitle.textContent = masteryName + ' Mastery';
+    
+    const masteryEntry = weaponsData.mastery_entries.find(m => m.name === masteryName);
+    
+    let bodyHTML = '<div class="property-section">';
+    bodyHTML += `<div class="property-desc"><strong>${masteryName}:</strong> ${weaponsData.mastery[masteryName]}</div>`;
+    
+    if (masteryEntry && masteryEntry.weapons.length > 0) {
+        bodyHTML += '<div class="property-title" style="margin-top: 20px;">Weapons with this Mastery:</div>';
+        bodyHTML += '<div class="weapon-links">';
+        masteryEntry.weapons.forEach(weaponName => {
+            bodyHTML += `<span class="weapon-link" data-weapon="${weaponName}">${weaponName}</span>`;
+        });
+        bodyHTML += '</div>';
+    }
+    
+    bodyHTML += '</div>';
+    
+    modalBody.innerHTML = bodyHTML;
+    
+    modalBody.querySelectorAll('.weapon-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const weaponName = link.dataset.weapon;
+            const weapon = weaponMap[weaponName.toLowerCase()];
+            if (weapon) {
+                openWeapon(weapon);
+            }
+        });
+    });
+    
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+});
+
+let allItems = [];
+
+function performSearch(query) {
+    const lowerQuery = query.toLowerCase();
+    
+    if (!query) {
+        allItems.forEach(item => item.element.classList.remove('hidden'));
+        document.querySelectorAll('.section-container').forEach(s => s.classList.remove('hidden'));
+        return;
+    }
+    
+    allItems.forEach(item => item.element.classList.add('hidden'));
+    
+    const matchingItems = allItems.filter(item => {
+        if (item.searchText) {
+            return item.searchText.toLowerCase().includes(lowerQuery);
+        }
+        return false;
+    });
+    
+    matchingItems.forEach(item => item.element.classList.remove('hidden'));
+    
+    document.querySelectorAll('.section-container').forEach(section => {
+        const hasVisibleItems = section.querySelectorAll('.item:not(.hidden)').length > 0;
+        if (hasVisibleItems) {
+            section.classList.remove('hidden');
+        } else {
+            section.classList.add('hidden');
+        }
+    });
+}
+
+searchBox.addEventListener('input', (e) => {
+    performSearch(e.target.value);
+});
+
+function renderSections() {
+    const sections = [
+        { key: 'simple_melee', title: 'Simple Melee Weapons', subtitle: 'Basic weapons for close combat' },
+        { key: 'simple_ranged', title: 'Simple Ranged Weapons', subtitle: 'Basic weapons for ranged attacks' },
+        { key: 'martial_melee', title: 'Martial Melee Weapons', subtitle: 'Advanced weapons for close combat' },
+        { key: 'martial_ranged', title: 'Martial Ranged Weapons', subtitle: 'Advanced weapons for ranged attacks' },
+        { key: 'mastery', title: 'Mastery Properties', subtitle: 'Special weapon techniques' },
+        { key: 'properties', title: 'Weapon Properties', subtitle: 'Weapon characteristics and rules' }
+    ];
+
+    allItems = [];
+    
+    const categorizedWeapons = {};
+    sections.forEach(section => {
+        if (section.key === 'mastery') {
+            categorizedWeapons[section.key] = weaponsData.mastery_entries;
+        } else if (section.key === 'properties') {
+            categorizedWeapons[section.key] = weaponsData.property_entries;
+        } else {
+            categorizedWeapons[section.key] = weaponsData.weapons.filter(w => w.category === section.key);
+        }
+    });
+    
+    sectionsContainer.innerHTML = sections.map(section => {
+        const items = categorizedWeapons[section.key] || [];
+        if (items.length === 0) return '';
+
+        let itemsHTML = '';
+        
+        if (section.key === 'mastery') {
+            itemsHTML = items.map((mastery, idx) => {
+                const itemId = `item-mastery-${idx}`;
+                return `
+                    <div class="item" id="${itemId}" data-type="mastery" data-index="${idx}">
+                        <div class="item-icon">${getMasteryIcon(mastery.name)}</div>
+                        <div class="item-text">
+                            <div class="item-title">${mastery.name}</div>
+                            <div class="item-desc">${mastery.weapons.length} weapons</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else if (section.key === 'properties') {
+            itemsHTML = items.map((property, idx) => {
+                const itemId = `item-property-${idx}`;
+                return `
+                    <div class="item" id="${itemId}" data-type="property" data-index="${idx}">
+                        <div class="item-icon">${getPropertyIcon(property.name)}</div>
+                        <div class="item-text">
+                            <div class="item-title">${property.name}</div>
+                            <div class="item-desc">${property.weapons.length} weapons</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            itemsHTML = items.map((weapon, idx) => {
+                const itemId = `item-${section.key}-${idx}`;
+                return `
+                    <div class="item" id="${itemId}" data-type="weapon" data-category="${section.key}" data-index="${idx}">
+                        <div class="item-icon">${getWeaponIcon(weapon)}</div>
+                        <div class="item-text">
+                            <div class="item-title">${weapon.name}</div>
+                            <div class="item-desc">${weapon.damage} • ${weapon.mastery}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        return `
+            <div class="section-container">
+                <div class="section-title">
+                    ${section.title} <span class="float-right">${items.length}</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-subtitle">${section.subtitle}</div>
+                    ${itemsHTML}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.querySelectorAll('.item').forEach(itemEl => {
+        const type = itemEl.dataset.type;
+        const index = parseInt(itemEl.dataset.index);
+        
+        if (type === 'weapon') {
+            const category = itemEl.dataset.category;
+            const weapon = categorizedWeapons[category][index];
+            
+            itemEl.addEventListener('click', () => openWeapon(weapon));
+            
+            allItems.push({
+                element: itemEl,
+                searchText: `${weapon.name} ${weapon.damage} ${weapon.properties} ${weapon.mastery}`
+            });
+        } else if (type === 'mastery') {
+            const mastery = categorizedWeapons['mastery'][index];
+            
+            itemEl.addEventListener('click', () => openMastery(mastery.name));
+            
+            allItems.push({
+                element: itemEl,
+                searchText: `${mastery.name} ${mastery.description} ${mastery.weapons.join(' ')}`
+            });
+        } else if (type === 'property') {
+            const property = categorizedWeapons['properties'][index];
+            
+            itemEl.addEventListener('click', () => openProperty(property.name));
+            
+            allItems.push({
+                element: itemEl,
+                searchText: `${property.name} ${property.description} ${property.weapons.join(' ')}`
+            });
+        }
+    });
+}
+
+renderSections();
+</script></body></html>

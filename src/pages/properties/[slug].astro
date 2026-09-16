@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths } from 'astro';
+import AppShell from '../../layouts/AppShell.astro';
+import RuleDetail from '../../components/RuleDetail.astro';
+import { properties, propertyUrl, url, weaponsWithProperty, type Rule } from '../../lib/data';
+
+export const getStaticPaths = (() =>
+  properties.map((rule) => ({ params: { slug: rule.slug }, props: { rule } }))) satisfies GetStaticPaths;
+
+const { rule } = Astro.props as { rule: Rule };
+const siblings = properties.map((p) => ({ name: p.name, href: propertyUrl(p.slug), current: p.slug === rule.slug }));
+---
+
+<AppShell title={`${rule.name} (Weapon Property)`} section="properties" description={rule.summary}>
+  <RuleDetail
+    kind="properties"
+    label="Weapon Property"
+    indexHref={url('properties/')}
+    indexLabel="Weapon Properties"
+    rule={rule}
+    weapons={weaponsWithProperty(rule.slug)}
+    siblings={siblings}
+  />
+</AppShell>

@@ -1,0 +1,31 @@
+---
+import FavButton from './FavButton.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  href: string;
+  summary: string;
+  badges?: { text: string; tone?: 'crimson' | 'gold' }[];
+  attrs?: Record<string, string>;
+}
+
+const { id, title, href, summary, badges = [], attrs = {} } = Astro.props;
+---
+
+<article class="card" {...attrs}>
+  <div class="card-top">
+    <h3 class="card-title"><a class="card-link" href={href}>{title}</a></h3>
+    <FavButton id={id} name={title} size={18} />
+  </div>
+  <p class="card-summary">{summary}</p>
+  {
+    badges.length > 0 && (
+      <div class="card-meta">
+        {badges.map((b) => (
+          <span class:list={['badge', b.tone && `badge-${b.tone}`]}>{b.text}</span>
+        ))}
+      </div>
+    )
+  }
+</article>

@@ -1,0 +1,13 @@
+---
+import { weaponUrl, type Weapon } from '../lib/data';
+
+interface Props {
+  weapons: Weapon[];
+}
+
+const { weapons } = Astro.props;
+---
+
+<div class="chips">
+  {weapons.map((w) => <a class="chip" href={weaponUrl(w.slug)}>{w.name}</a>)}
+</div>
