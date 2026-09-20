@@ -1,13 +1,17 @@
 #!/usr/bin/env node
-// Validates src/data/glossary.json. Exits non-zero with messages on any
-// problem. No dependencies (Node >= 18).
+// Validates src/data/glossary.json and src/data/combat-rules.json, which share
+// one schema and are merged into a single list of rules at build time. Exits
+// non-zero with messages on any problem. No dependencies (Node >= 18).
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PATH = join(__dirname, "..", "src", "data", "glossary.json");
+const DATA_FILES = ["glossary.json", "combat-rules.json"].map((f) => ({
+  name: f,
+  path: join(__dirname, "..", "src", "data", f),
+}));
 
 const ALLOWED_CATEGORIES = new Set([
   "Actions",
@@ -32,18 +36,22 @@ const REQUIRED_KEYS = ["slug", "title", "category", "summary", "body"];
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 function main() {
-  const raw = readFileSync(DATA_PATH, "utf-8");
-  let data;
-  try {
-    data = JSON.parse(raw);
-  } catch (err) {
-    console.error(`FAIL: could not parse JSON: ${err.message}`);
-    process.exit(1);
-  }
-
-  if (!Array.isArray(data)) {
-    console.error("FAIL: glossary.json must be a JSON array");
-    process.exit(1);
+  const data = [];
+  const counts = [];
+  for (const file of DATA_FILES) {
+    let parsed;
+    try {
+      parsed = JSON.parse(readFileSync(file.path, "utf-8"));
+    } catch (err) {
+      console.error(`FAIL: could not parse ${file.name}: ${err.message}`);
+      process.exit(1);
+    }
+    if (!Array.isArray(parsed)) {
+      console.error(`FAIL: ${file.name} must be a JSON array`);
+      process.exit(1);
+    }
+    counts.push(`${parsed.length} from ${file.name}`);
+    data.push(...parsed);
   }
 
   const errors = [];
@@ -114,12 +122,12 @@ function main() {
   }
 
   if (errors.length > 0) {
-    console.error(`FAIL: ${errors.length} problem(s) found in glossary.json:\n`);
+    console.error(`FAIL: ${errors.length} problem(s) found in the rules data:\n`);
     for (const e of errors) console.error(" - " + e);
     process.exit(1);
   }
 
-  console.log(`OK: ${data.length} glossary entries validated successfully.`);
+  console.log(`OK: ${data.length} glossary entries validated successfully (${counts.join(", ")}).`);
   process.exit(0);
 }
 

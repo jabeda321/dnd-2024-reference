@@ -13,6 +13,10 @@ const PAGES = [
   { name: 'weapons index', path: 'weapons/' },
   { name: 'weapon detail (longsword)', path: 'weapons/longsword/' },
   { name: 'masteries index', path: 'masteries/' },
+  { name: 'equipment index', path: 'equipment/' },
+  { name: 'equipment detail (plate armor, stat list)', path: 'equipment/plate-armor/' },
+  { name: 'equipment detail (ammunition, has a table)', path: 'equipment/ammunition/' },
+  { name: 'glossary detail (mounted combat)', path: 'glossary/mounted-combat/' },
   { name: 'favourites', path: 'favourites/' },
 ] as const;
 

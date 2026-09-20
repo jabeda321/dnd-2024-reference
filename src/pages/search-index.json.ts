@@ -1,5 +1,8 @@
 import type { APIRoute } from 'astro';
 import {
+  equipment,
+  equipmentKindMeta,
+  equipmentUrl,
   glossary,
   glossaryUrl,
   masteries,
@@ -15,7 +18,7 @@ import {
 export interface SearchDoc {
   /** Stable id, also used as the favourites key. */
   id: string;
-  kind: 'rule' | 'weapon' | 'mastery' | 'property';
+  kind: 'rule' | 'weapon' | 'mastery' | 'property' | 'equipment';
   title: string;
   label: string;
   summary: string;
@@ -60,6 +63,15 @@ export const GET: APIRoute = () => {
       summary: p.summary,
       url: propertyUrl(p.slug),
       text: stripHtml(p.body),
+    })),
+    ...equipment.map((i) => ({
+      id: `equipment/${i.slug}`,
+      kind: 'equipment' as const,
+      title: i.name,
+      label: equipmentKindMeta(i.kind).label,
+      summary: `${i.cost}${i.weight === '—' ? '' : ` · ${i.weight}`} · ${i.summary}`,
+      url: equipmentUrl(i.slug),
+      text: `${i.group} ${i.stats.map((s) => `${s.label} ${s.value}`).join(' ')} ${stripHtml(i.body)}`,
     })),
   ];
   return new Response(JSON.stringify(docs), { headers: { 'Content-Type': 'application/json' } });

@@ -7,6 +7,7 @@ const kinds = [
   { value: 'weapon', label: 'Weapons' },
   { value: 'mastery', label: 'Masteries' },
   { value: 'property', label: 'Properties' },
+  { value: 'equipment', label: 'Equipment' },
 ];
 ---
 
@@ -25,6 +26,7 @@ const kinds = [
       aria-controls="palette-results"
       aria-autocomplete="list"
     />
+    <span class="palette-count" data-palette-count aria-hidden="true"></span>
     <button class="icon-btn" type="button" data-close-search aria-label="Close search"><Icon name="x" /></button>
   </div>
   <div class="palette-filters" role="group" aria-label="Filter results">
@@ -39,6 +41,7 @@ const kinds = [
     <span data-kind="weapon"><Icon name="sword" /></span>
     <span data-kind="mastery"><Icon name="sparkles" /></span>
     <span data-kind="property"><Icon name="tag" /></span>
+    <span data-kind="equipment"><Icon name="backpack" /></span>
     <span data-kind="recent"><Icon name="clock" /></span>
   </template>
   <div class="palette-footer" aria-hidden="true">

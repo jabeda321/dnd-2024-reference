@@ -38,7 +38,7 @@ import { url } from '../../lib/data';
   const grid = document.querySelector<HTMLElement>('[data-fav-grid]')!;
   const empty = document.querySelector<HTMLElement>('[data-fav-empty]')!;
   const tpl = document.querySelector<HTMLTemplateElement>('#fav-card')!;
-  const KIND: Record<string, string> = { weapon: 'Weapon', mastery: 'Mastery', property: 'Property' };
+  const KIND: Record<string, string> = { weapon: 'Weapon', mastery: 'Mastery', property: 'Property', equipment: 'Equipment' };
 
   async function render() {
     const favs = getFavourites();

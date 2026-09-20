@@ -9,6 +9,8 @@ const PAGES = [
   { name: 'glossary', path: 'glossary/' },
   { name: 'weapons', path: 'weapons/' },
   { name: 'glossary-breaking-objects', path: 'glossary/breaking-objects/' },
+  { name: 'equipment', path: 'equipment/' },
+  { name: 'equipment-plate-armor', path: 'equipment/plate-armor/' },
 ];
 
 const SCHEMES = ['light', 'dark'] as const;

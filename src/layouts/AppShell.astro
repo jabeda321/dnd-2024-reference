@@ -5,9 +5,16 @@ import '@fontsource-variable/inter';
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
 import SearchPalette from '../components/SearchPalette.astro';
-import { CATEGORIES, glossary, masteries, properties, url, weapons } from '../lib/data';
+import { CATEGORIES, equipment, glossary, masteries, properties, url, weapons } from '../lib/data';
 
-export type Section = 'home' | 'glossary' | 'weapons' | 'masteries' | 'properties' | 'favourites';
+export type Section =
+  | 'home'
+  | 'glossary'
+  | 'weapons'
+  | 'masteries'
+  | 'properties'
+  | 'equipment'
+  | 'favourites';
 
 interface Props {
   title: string;
@@ -119,6 +126,7 @@ const within = (s: Section) => (section === s && !current(s) ? '' : undefined);
             <li><a class="nav-link" href={url('weapons/')} aria-current={current('weapons')} data-active={within('weapons')}><Icon name="swords" size={18} />Weapons<span class="nav-count">{weapons.length}</span></a></li>
             <li><a class="nav-link" href={url('masteries/')} aria-current={current('masteries')} data-active={within('masteries')}><Icon name="sparkles" size={18} />Weapon Masteries<span class="nav-count">{masteries.length}</span></a></li>
             <li><a class="nav-link" href={url('properties/')} aria-current={current('properties')} data-active={within('properties')}><Icon name="tag" size={18} />Weapon Properties<span class="nav-count">{properties.length}</span></a></li>
+            <li><a class="nav-link" href={url('equipment/')} aria-current={current('equipment')} data-active={within('equipment')}><Icon name="backpack" size={18} />Gear &amp; Armor<span class="nav-count">{equipment.length}</span></a></li>
           </ul>
         </div>
       </nav>
@@ -142,7 +150,7 @@ const within = (s: Section) => (section === s && !current(s) ? '' : undefined);
       <a href={url()} aria-current={section === 'home' ? 'page' : undefined}><Icon name="home" size={22} />Home</a>
       <a href={url('glossary/')} aria-current={section === 'glossary' ? 'page' : undefined}><Icon name="book" size={22} />Rules</a>
       <button type="button" data-open-search aria-haspopup="dialog"><Icon name="search" size={22} />Search</button>
-      <a href={url('weapons/')} aria-current={['weapons', 'masteries', 'properties'].includes(section) ? 'page' : undefined}><Icon name="swords" size={22} />Weapons</a>
+      <a href={url('weapons/')} aria-current={['weapons', 'masteries', 'properties', 'equipment'].includes(section) ? 'page' : undefined}><Icon name="swords" size={22} />Weapons</a>
       <a href={url('favourites/')} aria-current={section === 'favourites' ? 'page' : undefined}><Icon name="star" size={22} />Saved</a>
     </nav>
 

@@ -1,8 +1,11 @@
 import glossaryJson from '../data/glossary.json';
+import combatRulesJson from '../data/combat-rules.json';
 import weaponsJson from '../data/weapons.json';
 import propertiesJson from '../data/properties.json';
 import masteriesJson from '../data/masteries.json';
 import introJson from '../data/weapons-intro.json';
+import equipmentJson from '../data/equipment.json';
+import equipmentIntroJson from '../data/equipment-intro.json';
 
 export interface GlossaryEntry {
   slug: string;
@@ -45,17 +48,67 @@ export interface Rule {
   body: string;
 }
 
-export const glossary: GlossaryEntry[] = (glossaryJson as (Omit<GlossaryEntry, 'seeAlso'> & { seeAlso?: string[] })[])
+export type EquipmentKind = 'armor' | 'tool' | 'gear' | 'mount' | 'vehicle';
+
+export interface EquipmentItem {
+  slug: string;
+  name: string;
+  kind: EquipmentKind;
+  /** The SRD table or sub-heading the item sits under, e.g. "Heavy Armor". */
+  group: string;
+  /** Position of `group` in the SRD's own order, for ordering group filters. */
+  groupIndex: number;
+  cost: string;
+  /** Cost in copper pieces, for sorting; null when the SRD gives none. */
+  costCp: number | null;
+  weight: string;
+  weightLb: number | null;
+  /** Type-specific columns (AC, Ability, Carrying Capacity…), rendered as given. */
+  stats: { label: string; value: string }[];
+  summary: string;
+  body: string;
+}
+
+// The Mounted Combat rules come from "Playing the Game", not the Rules Glossary,
+// but they are the same shape and belong beside the rules they reference.
+export const glossary: GlossaryEntry[] = (
+  [...glossaryJson, ...combatRulesJson] as (Omit<GlossaryEntry, 'seeAlso'> & { seeAlso?: string[] })[]
+)
   .map((e) => ({ ...e, seeAlso: e.seeAlso ?? [] }))
   .sort((a, b) => a.title.localeCompare(b.title));
 export const weapons = weaponsJson as Weapon[];
 export const properties = (propertiesJson as Rule[]).slice().sort((a, b) => a.name.localeCompare(b.name));
 export const masteries = (masteriesJson as Rule[]).slice().sort((a, b) => a.name.localeCompare(b.name));
 export const weaponsIntro = introJson as { weapons: string; properties: string; masteries: string };
+export const equipment = equipmentJson as EquipmentItem[];
+export const equipmentIntro = equipmentIntroJson as Record<
+  'armor' | 'tools' | 'gear' | 'mounts' | 'vehicles',
+  string
+>;
 
 export const glossaryBySlug = new Map(glossary.map((e) => [e.slug, e]));
 export const propertyBySlug = new Map(properties.map((p) => [p.slug, p]));
 export const masteryBySlug = new Map(masteries.map((m) => [m.slug, m]));
+export const equipmentBySlug = new Map(equipment.map((i) => [i.slug, i]));
+
+/** Equipment kinds in display order, with the filter label and intro text used for each. */
+export const EQUIPMENT_KINDS = [
+  { kind: 'armor', label: 'Armor', plural: 'armor', intro: 'armor' },
+  { kind: 'tool', label: 'Tools', plural: 'tools', intro: 'tools' },
+  { kind: 'gear', label: 'Gear', plural: 'gear', intro: 'gear' },
+  { kind: 'mount', label: 'Mounts', plural: 'mounts', intro: 'mounts' },
+  { kind: 'vehicle', label: 'Vehicles', plural: 'vehicles', intro: 'vehicles' },
+] as const satisfies readonly {
+  kind: EquipmentKind;
+  label: string;
+  plural: string;
+  intro: keyof typeof equipmentIntro;
+}[];
+
+export const equipmentKindMeta = (kind: EquipmentKind) =>
+  EQUIPMENT_KINDS.find((k) => k.kind === kind) ?? EQUIPMENT_KINDS[2];
+
+export const equipmentOfKind = (kind: EquipmentKind) => equipment.filter((i) => i.kind === kind);
 
 /** Glossary categories in display order, with the icon used for each. */
 export const CATEGORIES = [
@@ -83,6 +136,7 @@ export const glossaryUrl = (slug: string) => url(`glossary/${slug}/`);
 export const weaponUrl = (slug: string) => url(`weapons/${slug}/`);
 export const propertyUrl = (slug: string) => url(`properties/${slug}/`);
 export const masteryUrl = (slug: string) => url(`masteries/${slug}/`);
+export const equipmentUrl = (slug: string) => url(`equipment/${slug}/`);
 
 export const weaponGroup = (w: Weapon) =>
   `${w.category === 'simple' ? 'Simple' : 'Martial'} ${w.kind === 'melee' ? 'Melee' : 'Ranged'}`;

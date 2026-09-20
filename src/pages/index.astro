@@ -1,7 +1,7 @@
 ---
 import AppShell from '../layouts/AppShell.astro';
 import Icon from '../components/Icon.astro';
-import { CATEGORIES, glossary, glossaryBySlug, glossaryUrl, masteries, masteryUrl, properties, url, weapons } from '../lib/data';
+import { CATEGORIES, equipment, glossary, glossaryBySlug, glossaryUrl, masteries, masteryUrl, properties, url, weapons } from '../lib/data';
 
 const counts = new Map<string, number>();
 for (const e of glossary) counts.set(e.category, (counts.get(e.category) ?? 0) + 1);
@@ -9,6 +9,7 @@ for (const e of glossary) counts.set(e.category, (counts.get(e.category) ?? 0) +
 const quick = [
   { title: 'Rules Glossary', text: `${glossary.length} rule definitions`, href: url('glossary/'), icon: 'book' },
   { title: 'Weapons', text: `${weapons.length} weapons, sortable table`, href: url('weapons/'), icon: 'swords' },
+  { title: 'Gear & Armor', text: `${equipment.length} items of equipment`, href: url('equipment/'), icon: 'backpack' },
   { title: 'Weapon Masteries', text: `${masteries.length} mastery properties`, href: url('masteries/'), icon: 'sparkles' },
   { title: 'Weapon Properties', text: `${properties.length} weapon properties`, href: url('properties/'), icon: 'tag' },
 ];

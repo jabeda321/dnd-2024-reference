@@ -1,0 +1,138 @@
+---
+import type { GetStaticPaths } from 'astro';
+import AppShell from '../../layouts/AppShell.astro';
+import EntryLayout from '../../components/EntryLayout.astro';
+import FavButton from '../../components/FavButton.astro';
+import Icon from '../../components/Icon.astro';
+import {
+  equipment,
+  equipmentKindMeta,
+  equipmentUrl,
+  linkTerms,
+  url,
+  wrapTables,
+  type EquipmentItem,
+} from '../../lib/data';
+
+export const getStaticPaths = (() =>
+  equipment.map((item) => ({ params: { slug: item.slug }, props: { item } }))) satisfies GetStaticPaths;
+
+const { item } = Astro.props as { item: EquipmentItem };
+const id = `equipment/${item.slug}`;
+const meta = equipmentKindMeta(item.kind);
+const indexHref = url('equipment/');
+
+// Sibling items share the SRD table this one came from, which is the most useful
+// thing to flick between (the other Heavy Armor, the other Artisan's Tools).
+// Adventuring Gear alone runs to 82 entries, so long groups show a window around
+// the current item and link to the filtered index for the rest.
+const group = equipment.filter((i) => i.group === item.group);
+const WINDOW = 24;
+const at = group.findIndex((i) => i.slug === item.slug);
+const start = Math.min(Math.max(0, at - Math.floor(WINDOW / 2)), Math.max(0, group.length - WINDOW));
+const siblings = group.length > WINDOW ? group.slice(start, start + WINDOW) : group;
+const groupHref = `${indexHref}?group=${encodeURIComponent(item.group)}`;
+---
+
+<AppShell title={item.name} section="equipment" description={item.summary}>
+  <EntryLayout backFallback={indexHref} backLabel="Equipment">
+    <article class="entry" data-doc-id={id}>
+      <div>
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href={indexHref}>Equipment</a></li>
+            <li><a href={`${indexHref}?kind=${item.kind}`}>{meta.label}</a></li>
+            <li aria-current="page">{item.name}</li>
+          </ol>
+        </nav>
+        <header class="entry-head">
+          <div class="entry-title-row">
+            <h1>{item.name}</h1>
+            <FavButton id={id} name={item.name} size={24} />
+          </div>
+          <div class="entry-meta">
+            <span class="badge badge-gold">{item.group}</span>
+            <span class="badge">{item.cost}</span>
+            {item.weight !== '—' && <span class="badge">{item.weight}</span>}
+          </div>
+        </header>
+      </div>
+
+      {
+        item.stats.length > 0 && (
+          <div class="panel">
+            <dl class="stat-list">
+              {item.stats.map((s) => (
+                <div class="stat-row">
+                  <dt>{s.label}</dt>
+                  <dd set:html={linkTerms(s.value, id, 'weapons')} />
+                </div>
+              ))}
+            </dl>
+          </div>
+        )
+      }
+
+      {
+        item.body && (
+          <div class="panel entry-body">
+            <div class="prose" set:html={wrapTables(linkTerms(item.body, id, 'weapons'))} />
+          </div>
+        )
+      }
+    </article>
+
+    <Fragment slot="aside">
+      <section class="panel panel-accent" aria-labelledby="at-a-glance">
+        <h2 class="panel-title" id="at-a-glance">
+          <Icon name="backpack" size={16} />
+          At a glance
+        </h2>
+        <dl class="stat-list">
+          <div class="stat-row"><dt>Type</dt><dd>{meta.label}</dd></div>
+          <div class="stat-row"><dt>Cost</dt><dd>{item.cost}</dd></div>
+          <div class="stat-row"><dt>Weight</dt><dd>{item.weight}</dd></div>
+        </dl>
+      </section>
+
+      {
+        group.length > 1 && (
+          <section class="panel" aria-labelledby="siblings">
+            <h2 class="panel-title" id="siblings">
+              <Icon name="tag" size={16} />
+              {item.group} ({group.length})
+            </h2>
+            <div class="chips">
+              {siblings.map((s) => (
+                <a
+                  class="chip"
+                  href={equipmentUrl(s.slug)}
+                  aria-current={s.slug === item.slug ? 'page' : undefined}
+                >
+                  {s.name}
+                </a>
+              ))}
+            </div>
+            {group.length > siblings.length && (
+              <p class="panel-more">
+                <a href={groupHref}>All {group.length} {item.group} →</a>
+              </p>
+            )}
+          </section>
+        )
+      }
+    </Fragment>
+  </EntryLayout>
+</AppShell>
+
+<style>
+  .chip[aria-current='page'] { background: var(--crimson-fill); border-color: var(--crimson-fill); color: var(--on-crimson); }
+  .panel-more { margin-block: var(--space-s) 0; font-size: 0.875rem; }
+  .stat-list { display: grid; gap: var(--space-xs); margin: 0; }
+  .stat-row { display: grid; grid-template-columns: minmax(6.5rem, max-content) 1fr; gap: var(--space-s); align-items: baseline; }
+  .stat-row dt { color: var(--text-muted); font-size: 0.875rem; }
+  .stat-row dd { margin: 0; }
+  @media (width < 30rem) {
+    .stat-row { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>

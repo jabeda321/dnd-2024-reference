@@ -7,6 +7,7 @@ const KIND_LABEL: Record<SearchDoc['kind'], string> = {
   weapon: 'Weapon',
   mastery: 'Mastery',
   property: 'Property',
+  equipment: 'Equipment',
 };
 
 // ---------------------------------------------------------------------------
@@ -44,6 +45,7 @@ function initPalette() {
   const input = dialog.querySelector<HTMLInputElement>('#palette-input')!;
   const list = dialog.querySelector<HTMLUListElement>('#palette-results')!;
   const status = dialog.querySelector<HTMLElement>('#palette-status')!;
+  const count = dialog.querySelector<HTMLElement>('[data-palette-count]')!;
   const kindButtons = [...dialog.querySelectorAll<HTMLButtonElement>('[data-kind]')].filter((b) => b.tagName === 'BUTTON');
   const icons = dialog.querySelector<HTMLTemplateElement>('#kind-icons')!.content;
 
@@ -98,6 +100,8 @@ function initPalette() {
       if (!results.length) list.append(status);
     }
     status.hidden = !!(results.length && !recentMode);
+    // The badge repeats what `status` announces, so it stays out of the a11y tree.
+    count.textContent = recentMode || !results.length ? '' : String(results.length);
     if (results.length) setActive(0);
     else input.removeAttribute('aria-activedescendant');
   }

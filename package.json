@@ -6,7 +6,7 @@
   "description": "D&D 2024 rules glossary, weapons and weapon masteries reference, built from SRD 5.2.1",
   "scripts": {
     "dev": "astro dev",
-    "validate": "node scripts/validate_glossary.mjs && node scripts/validate_weapons.mjs",
+    "validate": "node scripts/validate_glossary.mjs && node scripts/validate_weapons.mjs && node scripts/validate_equipment.mjs",
     "build": "npm run validate && astro check && astro build && node scripts/generate-sw.mjs",
     "preview": "astro preview",
     "pretest": "npm run build",

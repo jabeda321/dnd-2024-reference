@@ -1,0 +1,330 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import FavButton from '../../components/FavButton.astro';
+import Icon from '../../components/Icon.astro';
+import {
+  EQUIPMENT_KINDS,
+  equipment,
+  equipmentKindMeta,
+  equipmentUrl,
+  url,
+} from '../../lib/data';
+
+// Groups in the order the SRD prints them, so the chip row reads Light -> Medium
+// -> Heavy Armor rather than following the items' alphabetical order.
+const groups = [...new Set([...equipment].sort((a, b) => a.groupIndex - b.groupIndex).map((i) => i.group))];
+
+const columns = [
+  { key: 'name', label: 'Name' },
+  { key: null, label: 'Details' },
+  { key: 'weight', label: 'Weight', num: true },
+  { key: 'cost', label: 'Cost', num: true },
+];
+
+// Sorting sends items with no listed weight or cost to the end either way.
+const sortValue = (n: number | null) => (n === null ? '' : String(n));
+---
+
+<AppShell
+  title="Equipment"
+  section="equipment"
+  description="Sortable, filterable table of D&D 2024 armor, tools, adventuring gear, mounts and vehicles with cost and weight."
+>
+  <header class="page-head">
+    <p class="eyebrow"><Icon name="backpack" size={16} />Equipment</p>
+    <h1>Equipment</h1>
+    <p class="lede">
+      All {equipment.length} items of armor, tools, adventuring gear, mounts and vehicles from the SRD. Weapons have{' '}
+      <a href={url('weapons/')}>their own table</a>.
+    </p>
+  </header>
+
+  <div class="toolbar" data-equipment-filters>
+    <div class="toolbar-row">
+      <label class="field">
+        <span class="visually-hidden">Filter equipment</span>
+        <Icon name="search" size={18} />
+        <input
+          class="input"
+          type="search"
+          placeholder="Filter by name or description…"
+          autocomplete="off"
+          data-filter-input
+        />
+      </label>
+      <div class="segmented" role="group" aria-label="Equipment type">
+        <button type="button" data-set="kind" data-value="" aria-pressed="true">All</button>
+        {
+          EQUIPMENT_KINDS.map((k) => (
+            <button type="button" data-set="kind" data-value={k.kind} aria-pressed="false">
+              {k.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+    <div class="chips-scroll" role="group" aria-label="Equipment group">
+      <button class="chip" type="button" data-set="group" data-value="" aria-pressed="true">Any group</button>
+      {
+        groups.map((g) => (
+          <button class="chip" type="button" data-set="group" data-value={g} aria-pressed="false">
+            {g}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="weapons-wrap">
+    <div class="toolbar-row card-sort" style="margin-block-end: var(--space-s)">
+      <label for="card-sort" class="result-count">Sort by</label>
+      <select class="select" id="card-sort" data-card-sort>
+        <option value="">SRD order</option>
+        <option value="name:asc">Name (A–Z)</option>
+        <option value="weight:asc">Weight (light–heavy)</option>
+        <option value="weight:desc">Weight (heavy–light)</option>
+        <option value="cost:asc">Cost (low–high)</option>
+        <option value="cost:desc">Cost (high–low)</option>
+      </select>
+      <span class="result-count" aria-live="polite" data-result-count>{equipment.length} items</span>
+    </div>
+
+    <table class="weapons-table equipment-table">
+      <caption class="visually-hidden">Equipment, sortable by column</caption>
+      <thead>
+        <tr>
+          {
+            columns.map((c) => (
+              <th scope="col" class:list={{ num: c.num }}>
+                {c.key ? (
+                  <button class="sort-btn" type="button" data-sort={c.key}>
+                    {c.label}
+                    <Icon name="arrowUpDown" size={13} />
+                  </button>
+                ) : (
+                  c.label
+                )}
+              </th>
+            ))
+          }
+          <th scope="col"><span class="visually-hidden">Favourite</span></th>
+        </tr>
+      </thead>
+      <tbody data-equipment-rows>
+        {
+          equipment.map((item, i) => (
+            <tr
+              data-item
+              data-order={i}
+              data-kind={item.kind}
+              data-group={item.group}
+              data-name={item.name}
+              data-weight={sortValue(item.weightLb)}
+              data-cost={sortValue(item.costCp)}
+              data-search={`${item.name} ${item.group} ${equipmentKindMeta(item.kind).label} ${item.summary}`.toLowerCase()}
+            >
+              <td class="w-name">
+                <a href={equipmentUrl(item.slug)}>{item.name}</a>
+                <small>{item.group}</small>
+              </td>
+              <td class="e-details">
+                {item.stats.length ? (
+                  <span class="prop-links">
+                    {item.stats.slice(0, 3).map((s) => (
+                      <span class="badge">
+                        {s.label}: {s.value}
+                      </span>
+                    ))}
+                  </span>
+                ) : (
+                  <span class="muted e-summary">{item.summary}</span>
+                )}
+              </td>
+              <td class="num w-weight" data-label="Weight">
+                {item.weight}
+              </td>
+              <td class="num w-cost" data-label="Cost">
+                {item.cost}
+              </td>
+              <td class="w-fav">
+                <FavButton id={`equipment/${item.slug}`} name={item.name} size={18} />
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" hidden data-empty>
+    <Icon name="backpack" size={28} />
+    <p><strong>No equipment matches those filters.</strong></p>
+    <button class="btn" type="button" data-reset>Clear filters</button>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Rules for equipment</h2>
+    </div>
+    <div class="card-grid">
+      <a class="card feature-card" href={url('weapons/')}>
+        <span class="feature-icon"><Icon name="swords" /></span>
+        <span
+          ><strong>Weapons</strong><br /><span class="card-summary">Damage, properties, mastery, weight and cost</span
+          ></span
+        >
+        <Icon name="chevronRight" class="chev" />
+      </a>
+      <a class="card feature-card" href={url('glossary/mounted-combat/')}>
+        <span class="feature-icon"><Icon name="move" /></span>
+        <span
+          ><strong>Mounted Combat</strong><br /><span class="card-summary"
+            >Mounting, controlling a mount, and falling off</span
+          ></span
+        >
+        <Icon name="chevronRight" class="chev" />
+      </a>
+      <a class="card feature-card" href={url('glossary/armor-training/')}>
+        <span class="feature-icon"><Icon name="shield" /></span>
+        <span
+          ><strong>Armor Training</strong><br /><span class="card-summary"
+            >What happens when you wear armor untrained</span
+          ></span
+        >
+        <Icon name="chevronRight" class="chev" />
+      </a>
+    </div>
+  </section>
+</AppShell>
+
+<style>
+  .w-fav { inline-size: 1%; padding-block: 0 !important; }
+  /* Gear rows show a sentence instead of stat badges; keep them short. */
+  .e-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .e-details .badge { white-space: normal; }
+  .e-details .prop-links { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+
+  /* Six type buttons don't fit a phone. The toolbar is a grid whose automatic
+     column sizes to its widest content, so the buttons would otherwise stretch
+     the whole toolbar past the viewport; cap the column and let them scroll. */
+  .toolbar { grid-template-columns: minmax(0, 1fr); }
+  .segmented { min-inline-size: 0; max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; }
+  .segmented::-webkit-scrollbar { display: none; }
+  .segmented button { white-space: nowrap; }
+
+  @container weapons (width < 46rem) {
+    /* The shared card layout places the weapons table's columns; this table has
+       its own, so give every cell an explicit slot rather than inherit them. */
+    .equipment-table .w-name,
+    .equipment-table .e-details { grid-column: 1 / -1; grid-row: auto; }
+    .equipment-table .w-weight { grid-column: 1; }
+    .equipment-table .w-cost { grid-column: 2; text-align: end; }
+    .equipment-table .w-fav { position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; inline-size: auto; }
+    .equipment-table tr { position: relative; padding-inline-end: 3.25rem; }
+  }
+  a.card { text-decoration: none; color: var(--text); }
+  a.card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+</style>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('[data-equipment-filters]')!;
+  const input = filters.querySelector<HTMLInputElement>('[data-filter-input]')!;
+  const tbody = document.querySelector<HTMLElement>('[data-equipment-rows]')!;
+  const rows = [...tbody.querySelectorAll<HTMLTableRowElement>('[data-item]')];
+  const count = document.querySelector<HTMLElement>('[data-result-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const cardSort = document.querySelector<HTMLSelectElement>('[data-card-sort]')!;
+  const sortButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-sort]')];
+
+  type SetKey = 'kind' | 'group';
+  const state: Record<SetKey, string> = { kind: '', group: '' };
+  let sortKey = '';
+  let sortDir: 'asc' | 'desc' = 'asc';
+
+  const params = new URLSearchParams(location.search);
+  for (const k of ['kind', 'group'] as SetKey[]) state[k] = params.get(k) ?? '';
+  input.value = params.get('q') ?? '';
+
+  function applyFilters() {
+    const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const row of rows) {
+      const d = row.dataset;
+      const match =
+        (!state.kind || d.kind === state.kind) &&
+        (!state.group || d.group === state.group) &&
+        terms.every((t) => d.search!.includes(t));
+      row.hidden = !match;
+      if (match) shown++;
+    }
+    filters.querySelectorAll<HTMLButtonElement>('[data-set]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(state[b.dataset.set as SetKey] === b.dataset.value));
+    });
+    count.textContent = `${shown} item${shown === 1 ? '' : 's'}`;
+    empty.hidden = shown > 0;
+
+    const next = new URLSearchParams();
+    for (const [k, v] of Object.entries(state)) if (v) next.set(k, v);
+    if (input.value.trim()) next.set('q', input.value.trim());
+    const qs = next.toString();
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  }
+
+  function applySort() {
+    const numeric = sortKey === 'weight' || sortKey === 'cost';
+    // Items the SRD gives no weight or cost for sort last, ascending or descending.
+    const num = (v: string) => (v === '' ? Infinity : Number(v));
+    const sorted = [...rows].sort((a, b) => {
+      if (!sortKey) return Number(a.dataset.order) - Number(b.dataset.order);
+      const av = a.dataset[sortKey]!;
+      const bv = b.dataset[sortKey]!;
+      if (numeric && (av === '' || bv === '')) return num(av) - num(bv);
+      const cmp = numeric ? num(av) - num(bv) : av.localeCompare(bv);
+      return (sortDir === 'asc' ? cmp : -cmp) || a.dataset.name!.localeCompare(b.dataset.name!);
+    });
+    tbody.append(...sorted);
+    sortButtons.forEach((btn) => {
+      const th = btn.closest('th')!;
+      if (btn.dataset.sort === sortKey) th.setAttribute('aria-sort', sortDir === 'asc' ? 'ascending' : 'descending');
+      else th.removeAttribute('aria-sort');
+    });
+    cardSort.value = sortKey ? `${sortKey}:${sortDir}` : '';
+  }
+
+  filters.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>('[data-set]');
+    if (!btn) return;
+    state[btn.dataset.set as SetKey] = btn.dataset.value ?? '';
+    applyFilters();
+  });
+  input.addEventListener('input', applyFilters);
+
+  sortButtons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.sort!;
+      if (sortKey !== key) {
+        sortKey = key;
+        sortDir = key === 'cost' ? 'desc' : 'asc';
+      } else if (sortDir === 'asc') {
+        sortDir = 'desc';
+      } else {
+        sortKey = '';
+      }
+      applySort();
+    }),
+  );
+  cardSort.addEventListener('change', () => {
+    const [key, dir] = cardSort.value.split(':');
+    sortKey = key ?? '';
+    sortDir = dir === 'desc' ? 'desc' : 'asc';
+    applySort();
+  });
+
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    state.kind = state.group = '';
+    input.value = '';
+    applyFilters();
+  });
+
+  applyFilters();
+</script>

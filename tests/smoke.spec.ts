@@ -1,6 +1,17 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 const BASE = '/dnd-2024-reference/';
+
+// Counts come from the data rather than being hard-coded, so adding rules or
+// items doesn't fail these tests; they still assert that everything renders.
+const data = (name: string) => JSON.parse(readFileSync(new URL(`../src/data/${name}`, import.meta.url), 'utf-8'));
+const GLOSSARY_COUNT = data('glossary.json').length + data('combat-rules.json').length;
+const WEAPON_COUNT = data('weapons.json').length;
+const MASTERY_COUNT = data('masteries.json').length;
+const PROPERTY_COUNT = data('properties.json').length;
+const EQUIPMENT_COUNT = data('equipment.json').length;
+const SEARCH_DOC_COUNT = GLOSSARY_COUNT + WEAPON_COUNT + MASTERY_COUNT + PROPERTY_COUNT + EQUIPMENT_COUNT;
 
 // These checks are about content/links, not responsive layout, so there's no
 // value in doubling the run by executing them on both projects.
@@ -20,6 +31,14 @@ const SAMPLE_ROUTES = [
   { path: 'masteries/topple/', label: 'mastery detail' },
   { path: 'properties/', label: 'properties index' },
   { path: 'properties/finesse/', label: 'property detail' },
+  { path: 'equipment/', label: 'equipment index' },
+  { path: 'equipment/plate-armor/', label: 'equipment detail (armor, stats only)' },
+  { path: 'equipment/oil/', label: 'equipment detail (gear, multi-paragraph body)' },
+  { path: 'equipment/ammunition/', label: 'equipment detail (gear, has a table)' },
+  { path: 'equipment/thieves-tools/', label: 'equipment detail (tool)' },
+  { path: 'equipment/warhorse/', label: 'equipment detail (mount)' },
+  { path: 'glossary/mounted-combat/', label: 'glossary detail (mounted combat)' },
+  { path: 'glossary/underwater-combat/', label: 'glossary detail (underwater combat)' },
   { path: 'favourites/', label: 'favourites' },
 ];
 
@@ -40,34 +59,39 @@ test('404 route returns a 404 status and a friendly page with one h1', async ({ 
   await expect(page).toHaveTitle(/.+/);
 });
 
-test('glossary index renders all 155 entries', async ({ page }) => {
+test('glossary index renders every entry', async ({ page }) => {
   await page.goto('glossary/');
-  await expect(page.locator('[data-entry]')).toHaveCount(155);
+  await expect(page.locator('[data-entry]')).toHaveCount(GLOSSARY_COUNT);
 });
 
-test('weapons index renders all 38 weapon rows', async ({ page }) => {
+test('weapons index renders every weapon row', async ({ page }) => {
   await page.goto('weapons/');
-  await expect(page.locator('tr[data-weapon]')).toHaveCount(38);
+  await expect(page.locator('tr[data-weapon]')).toHaveCount(WEAPON_COUNT);
 });
 
-test('masteries index renders all 8 mastery sections', async ({ page }) => {
+test('masteries index renders every mastery section', async ({ page }) => {
   await page.goto('masteries/');
-  await expect(page.locator('.def-list .def-item')).toHaveCount(8);
+  await expect(page.locator('.def-list .def-item')).toHaveCount(MASTERY_COUNT);
 });
 
-test('properties index renders all 10 property sections', async ({ page }) => {
+test('properties index renders every property section', async ({ page }) => {
   await page.goto('properties/');
-  await expect(page.locator('.def-list .def-item')).toHaveCount(10);
+  await expect(page.locator('.def-list .def-item')).toHaveCount(PROPERTY_COUNT);
 });
 
-test('search-index.json has 211 docs and every url resolves', async ({ request }) => {
+test('equipment index renders every item row', async ({ page }) => {
+  await page.goto('equipment/');
+  await expect(page.locator('tr[data-item]')).toHaveCount(EQUIPMENT_COUNT);
+});
+
+test('search-index.json covers every doc and every url resolves', async ({ request }) => {
   const res = await request.get('search-index.json');
   expect(res.status()).toBe(200);
   const docs = (await res.json()) as { id: string; url: string }[];
-  expect(docs).toHaveLength(211);
+  expect(docs).toHaveLength(SEARCH_DOC_COUNT);
 
   const uniqueUrls = [...new Set(docs.map((d) => d.url))];
-  expect(uniqueUrls).toHaveLength(211);
+  expect(uniqueUrls).toHaveLength(SEARCH_DOC_COUNT);
 
   const results = await Promise.all(
     uniqueUrls.map(async (url) => {
@@ -86,12 +110,16 @@ test('every internal link on core index/detail pages resolves to 200', async ({ 
     'weapons/',
     'masteries/',
     'properties/',
-    // 5 sampled detail pages across the different kinds.
+    'equipment/',
+    // Sampled detail pages across the different kinds.
     'glossary/grappled-condition/',
     'glossary/prone-condition/',
     'glossary/breaking-objects/',
+    'glossary/mounted-combat/',
     'weapons/longsword/',
     'masteries/topple/',
+    'equipment/plate-armor/',
+    'equipment/ammunition/',
   ];
 
   const hrefs = new Set<string>();

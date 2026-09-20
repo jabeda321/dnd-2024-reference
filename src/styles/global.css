@@ -897,9 +897,12 @@
 
   /* ---- Search palette --------------------------------------------------- */
   .palette {
-    inline-size: min(100vw - 2rem, 40rem);
-    max-block-size: min(80dvh, 38rem);
-    margin: 10dvh auto auto;
+    /* 100% rather than 100vw: vw includes the scrollbar, which overflowed the page. */
+    inline-size: min(100% - 2rem, 42rem);
+    /* Anchored just below the app header so opening search never covers the top
+       bar, and capped so the panel always stops short of the viewport bottom. */
+    margin: calc(var(--header-h) + var(--space-s)) auto auto;
+    max-block-size: min(38rem, calc(100dvh - var(--header-h) - var(--space-xl)));
     padding: 0;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-l);
@@ -915,23 +918,37 @@
   .palette-input-row {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: var(--space-s);
     padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-m);
     border-block-end: 1px solid var(--border);
+    background: var(--surface);
   }
   .palette-input-row .icon { color: var(--crimson); flex: none; }
   .palette-input {
     flex: 1;
     min-inline-size: 0;
-    block-size: 2.75rem;
+    block-size: 3rem;
     border: 0;
     background: none;
     font-size: 1.05rem;
     outline: none;
   }
+  /* Live match count, so the panel says how much it found without a wall of text. */
+  .palette-count {
+    flex: none;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .palette-count:empty { display: none; }
   .palette-input:focus-visible { outline: none; }
   .palette-input::-webkit-search-cancel-button { display: none; }
-  .palette-filters { display: flex; gap: var(--space-2xs); padding: var(--space-xs) var(--space-m); border-block-end: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  /* Wrap rather than scroll: six short filters fit one row on desktop and two on a
+     phone, so no option is hidden off the edge or clipped mid-word. */
+  .palette-filters { display: flex; flex-wrap: wrap; gap: var(--space-2xs); padding: var(--space-xs) var(--space-m); border-block-end: 1px solid var(--border); }
   .palette-filters .chip { min-block-size: 2rem; font-size: 0.78rem; flex: none; }
   .palette-results { flex: 1; overflow-y: auto; padding: var(--space-xs); list-style: none; overscroll-behavior: contain; }
   .palette-result {
@@ -963,7 +980,23 @@
     font-size: 0.75rem;
   }
   @media (width < 40rem) {
-    .palette { inline-size: 100vw; max-inline-size: 100vw; max-block-size: 100dvh; block-size: 100dvh; margin: 0; border-radius: 0; border: 0; }
+    /* Full screen on a phone: the results need the room and the targets need the
+       size. Pinned with inset rather than a 100%/100dvh box so it tracks the layout
+       viewport exactly as a mobile browser's URL bar shows and hides. */
+    .palette {
+      position: fixed;
+      inset: 0;
+      inline-size: auto;
+      max-inline-size: none;
+      block-size: auto;
+      max-block-size: none;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+    }
+    /* Keep the input clear of the status bar / notch (the viewport is fit-to-cover). */
+    .palette-input-row { padding-block-start: max(var(--space-xs), env(safe-area-inset-top)); }
+    .palette-results { padding-block-end: max(var(--space-xs), env(safe-area-inset-bottom)); }
     .palette-footer { display: none; }
   }
 
